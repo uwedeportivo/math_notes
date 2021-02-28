@@ -1,0 +1,101 @@
+\input{../common/common.tex}
+
+\title{Math notes - Maximum subsequence}
+\author{Uwe Hoffmann}
+\hypersetup{colorlinks, pdftitle={Math notes - Maximum subsequence}}
+
+\begin{document}
+
+\setcounter{chapter}{1}
+\section*{Maximum subsequence}
+
+\vspace{10 mm}
+\begin{problem}
+Given a sequence  of integer numbers $x_0, x_1, \dots, x_{N-1}$ (not necessarily positive) find a subsequence $x_i,\dots,x_{j - 1}$ such that the sum of numbers in it is maximum over all subsequences of consecutive elements.
+\end{problem}
+
+We adopt the same notation used in \textit{Programming in the 1990s} \cite{Cohen90} and \textit{Programming, The Derivation of Algorithms}\cite{Kaldewaij90}: The notation of function application is the "dot" notation with name of function, followed by arguments, each separated by a dot. The notation of quantified expressions has the operator followed by the bounded variables, then a colon followed by the range for the bounded variables and ended with a colon and the actual expression. So
+
+\begin{equation*}	 
+	(\sum k : i \leq k < j : x_k)
+\end{equation*}
+
+\noindent corresponds to the more classical mathematical notation $\sum_{k = i}^{ j - 1}x_k$. 
+
+\noindent For our derivation steps in predicate calculus we will use the following notation:
+
+\begin{equation*}
+\begin{array}{lcl}
+		&&A \\
+	      &=& \{  \mbox{reason why A equals B} \} \\      
+                  &&B \\
+                &\leq& \{ \mbox{reason why B is less than C} \} \\
+                  && C  
+   \end{array}
+\end{equation*}
+
+If all the numbers are positive then the maximum sum is the sum of the whole initial sequence. If all the numbers are negative then the maximum sum is 0 (by definition 0 is the sum over an empty range). So the interesting case is a sequence with positive and negative numbers in it.
+
+We hope to find an algorithm that visits every number in the sequence only once, so with runtime $O(n)$. Let's introduce some notation:
+Let's introduce some notation\footnote{Our problem can be stated as finding $f.N$ given $x_i \in \mathbb{Z}, 0 \leq i < N, N \in \mathbb{N}$.}
+:
+
+\[
+	f.n = (MAX i, j : 0 \leq i \leq j \leq n : s.i.j) 
+\]
+with 
+\[	 
+	s.i.j = (\sum k : i \leq k < j : x_k).
+\]
+
+We will use properties of quantified expressions as covered in Chapter 3 of \textit{Programming in the 1990s}\cite{Cohen90}.
+
+\[
+\begin{array}{lcl}
+		&&f.N \\
+	      &=& { < \mbox{definition of f } >} \\      
+                  && (MAX i, j : 0 \leq i \leq j \leq N : s.i.j)\\
+                &=& { < \mbox{range nesting} >} \\
+                  && (MAX j : 0 \leq j \leq N : (MAX i:  0 \leq i \leq j : s.i.j)) \\
+                &=& { < \mbox{defining}\  p.j =  (MAX i:  0 \leq i \leq j : s.i.j) >} \\ 
+                   && (MAX j : 0 \leq j \leq N : p.j) \\
+                &=& { < \mbox{range split, 1-point rule} >} \\
+                	 && (MAX j : 0 \leq j < N : p.j) \ max \ p.N \\
+	       &=& { < \mbox{definition of f } >} \\
+	       	&& f.(N - 1) \ max \ p.N 	   
+   \end{array}
+\]
+
+We now have a recursive expression for $f$, which still depends on a newly introduced function p. Let's see if we can get a recursive expression for p too:
+
+\[
+\begin{array}{lcl}
+		&&p.N \\
+		&=& { < \mbox{definition of p } >} \\
+		 && (MAX i:  0 \leq i \leq N : s.i.N) \\
+		 &=& { < \mbox{range split, 1-point rule} >} \\
+		 && (MAX i:  0 \leq i < N : s.i.N)\ max \ s.N.N \\
+		 &=& { < \mbox{definition of s and s.N.N = 0 by definition of sum over empty range} >} \\
+		 && (MAX i:  0 \leq i < N : (\sum k : i \leq k < N : x_k))\ max \ 0 \\
+		 &=& { < \mbox{range split in sum} >} \\
+		 && (MAX i:  0 \leq i < N : (\sum k : i \leq k < N - 1 : x_k) + x_{N - 1})\ max \ 0 \\
+		 &=& { < \mbox{+ distributes over max} >} \\
+		 && (x_{N - 1} + (MAX i:  0 \leq i < N : (\sum k : i \leq k < N - 1 : x_k))\ max \ 0 \\
+		 &=& { < \mbox{definition of p } >} \\
+		 && (x_{N - 1} + p.(N - 1))\ max \ 0
+   \end{array}
+\]
+
+So $f.N = f.(N - 1)\ max\ p.N$ and $p.N = (x_{N - 1} + p.(N - 1))\ max\ 0$. The base cases are $f.0 = 0$ and $p.0 = 0$.
+
+Armed with these recursive relations we can provide a Haskell program that solves the problem:
+
+\lstinputlisting[language=Haskell, basicstyle=\small, frame=trBL, caption={Haskell code}]{maxSum.hs}
+
+The maxSum function calculates the tuple $(f.N, p.N)$.
+
+\bibliographystyle{plainnat}
+\bibliography{../common/math}
+
+\end{document}
+

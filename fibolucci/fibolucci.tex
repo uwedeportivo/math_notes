@@ -1,0 +1,364 @@
+\input{../common/common.tex}
+
+\title{Math notes - Fibolucci}
+\author{Uwe Hoffmann}
+\hypersetup{colorlinks, pdftitle={Math notes - Fibolucci}}
+
+\begin{document}
+
+\setcounter{chapter}{1}
+\section*{Fibolucci}
+
+\newthought{Exercise `Fibolucci'} in \textit{Programming, The Derivation of Algorithms}\cite{Kaldewaij90}.\index{Fibolucci}
+
+\vspace{10 mm}
+\begin{problem}
+Write a program that calculates the function 
+
+\begin{equation*}
+f(n) = \sum_{i = 0}^{n} \mathit{fib}(i) \mathit{fib}(n - i)  \text{, for } n \geq 0
+\end{equation*}
+where $\mathit{fib}$ is the Fibonacci sequence defined by:
+\begin{equation*}
+\begin{split}
+& \mathit{fib}(0) = 0 \\
+& \mathit{fib}(1) = 1 \\
+& \mathit{fib}(n + 2) = \mathit{fib}(n + 1) + \mathit{fib}(n) \text{, for } n \geq 0
+\end{split}   
+\end{equation*}
+
+\end{problem}
+
+To solve the Fibolucci sum we adopt the same notation used in \textit{Programming in the 1990s}\cite{Cohen90}: The notation of function application is the "dot" notation with name of function, followed by arguments, each separated by a dot. The notation of quantified expressions has the operator followed by the bounded variables, then a colon followed by the range for the bounded variables and ended with a colon and the actual expression. So
+
+\[	 
+	(\sum k : i \leq k < j : x_k)
+\]
+
+\noindent corresponds to the more classical mathematical notation $\sum_{k = i}^{ j - 1}x_k$. 
+
+For our derivation steps in predicate calculus we will use the following notation:
+
+\[
+\begin{array}{lcl}
+		&&A \\
+	      &=& { < \mbox{reason why A equals B } >} \\      
+                  &&B \\
+                &\leq& { < \mbox{reason why B is less than C} >} \\
+                  && C  
+   \end{array}
+\]
+
+We start by finding a recursive expression for $f$. We will use properties of quantified expressions as covered in Chapter 3 of \textit{Programming in the 1990s}\cite{Cohen90}. Since $ \mathit{fib}.(0) = 0$ we can use an equivalent definition expression for $f$:
+\[
+f(n) = (\sum i: 1 \leq i < n: \mathit{fib}.i\  \mathit{fib}.(n - i))
+\]
+
+We derive:
+\[
+\begin{array}{lcl}
+		&&f.(n + 2) \\
+	      &=& { < \text{definition of  } f\ >} \\      
+                  && (\sum i: 1 \leq i < n + 2: \mathit{fib}.i\  \mathit{fib}.(n + 2 - i))\\
+                &=& { < \text{range split, 1-point rule} >} \\
+                  &&  (\sum i: 1 \leq i < n + 1: \mathit{fib}.i\  \mathit{fib}.(n + 2 - i)) + \mathit{fib}.(n+ 1)\  \mathit{fib}.(1) \\
+                &=& { <\  \mathit{fib}.(1) = 1\  >} \\ 
+                   && (\sum i: 1 \leq i < n + 1: \mathit{fib}.i\  \mathit{fib}.(n + 2 - i)) + \mathit{fib}.(n+ 1)\\
+	       &=& { < \text{definition of } \mathit{fib}\ >} \\
+	       	&& (\sum i: 1 \leq i < n + 1: \mathit{fib}.i\  (\mathit{fib}.(n + 1 - i) + \mathit{fib}.(n - i))) + \mathit{fib}.(n+ 1)\\
+	      &=& { < \text{splitting the term} >} \\
+	       	&& (\sum i: 1 \leq i < n + 1: \mathit{fib}.i\  \mathit{fib}.(n + 1 - i))\ + \\
+		&& (\sum i: 1 \leq i < n + 1: \mathit{fib}.i\  \mathit{fib}.(n - i)) + \mathit{fib}.(n+ 1)\\	      &=& { < \text{definition of } f\ >} \\
+	       	&& f.(n + 1) +  (\sum i: 1 \leq i < n + 1: \mathit{fib}.i\  \mathit{fib}.(n - i)) + \mathit{fib}.(n+ 1) \\
+	      &=& { < \text{range split, 1-point rule, } \mathit{fib}.(0) = 0\  >} \\
+                  && f.(n + 1) +  (\sum i: 1 \leq i < n: \mathit{fib}.i\  \mathit{fib}.(n - i)) + \mathit{fib}.(n+ 1) \\
+               &=& { < \text{definition of } f\ >} \\
+	       	&& f.(n + 1) +  f.n + \mathit{fib}.(n+ 1)   
+   \end{array}
+\]
+
+We get the recursive definition of $f$:
+\begin{equation*}
+\begin{split}
+& f.0 = 0 \\
+& f.1 = 0 \\
+& f.(n + 2) = \mathit{fib}.(n + 1) + f.(n + 1) + f.n \text{, for } n \geq 0
+\end{split}   
+\end{equation*}
+
+It is straightforward to write a program that computes $f$ from this recursive definition, either iteratively with a loop that step by step computes next values of $f$ starting with $f(2)$ and remembering the last two computed values of $f$ and of $\mathit{fib}$ for the next computations, or in Haskell by simply declaring the above recursions for $f$ and $\mathit{fib}$. This will lead to a runtime of $O(n)$. But can we do better than linear ?
+
+Let's look again at the recursive expressions of the two functions involved, leaving out the base cases and computing one additional next value:
+
+\begin{equation*}
+\begin{split}
+& f.(n + 2) = \mathit{fib}.(n + 1) + f.(n + 1) + f.n \\
+& f.(n + 3) = \mathit{fib}.(n + 2) + f.(n + 2) + f.(n + 1) \\
+& \mathit{fib}.(n + 2) = \mathit{fib}.(n + 1) + \mathit{fib}.n \\
+& \mathit{fib}.(n + 3) = \mathit{fib}.(n + 2) + \mathit{fib}.(n + 1)
+\end{split}   
+\end{equation*}
+
+The key observation we can make here is that new values of the two functions are linear combinations of previously computed values. Linear combinations implies linear applications with matrix representations from linear algebra. How many previously computed values, i.e. how far back do we need to go: we need the last computed value last and the value computed before that, so 2 previous values. Looks like we could try something in a linear space of dimension 2. 
+
+Let's try first with $\mathit{fib}$ which is simpler and doesn't depend on $f$. We define the function $\mathit{Fib}: \mathbb{N}  \rightarrow \mathbb{N}^2$ into the two-dimensional space $\mathbb{N}^2$:
+
+\[
+  \mathit{Fib}.n = 
+  \begin{pmatrix}
+       \mathit{fib}.n \\
+       \mathit{fib}.(n + 1)
+   \end{pmatrix}   \text{, for } n \geq 0 
+\]
+
+For a recursive expression for $\mathit{Fib}$ we have:
+\[
+\begin{array}{lcl}
+  &&\mathit{Fib}.(n + 1) \\
+   &=& { < \text{definition of  } \mathit{Fib}\ >} \\ 
+  &&\begin{pmatrix}
+       \mathit{fib}.(n + 1) \\
+       \mathit{fib}.(n + 2)
+   \end{pmatrix} \\
+   &=& { < \text{definition of  } \mathit{fib}\ >} \\ 
+   &&\begin{pmatrix}
+       \mathit{fib}.(n + 1) \\
+       \mathit{fib}.(n + 1) + \mathit{fib}.n
+   \end{pmatrix} \\
+   &=& { < \text{matrix multiplication}  >} \\ 
+   &&\begin{pmatrix}
+       0 & 1 \\
+       1 & 1
+   \end{pmatrix} 
+   \begin{pmatrix}
+        \mathit{fib}.n \\
+       \mathit{fib}.(n + 1)
+   \end{pmatrix} \\
+   &=& { < \text{definition of  } \mathit{Fib}\ >} \\ 
+   &&\begin{pmatrix}
+       0 & 1 \\
+       1 & 1
+   \end{pmatrix} \mathit{Fib}.n
+  \end{array}
+\]
+
+So 
+\[
+  \mathit{Fib}.(n + 1) = 
+  \begin{pmatrix}
+       0 & 1 \\
+       1 & 1
+   \end{pmatrix}   \mathit{Fib}.n = \ldots = 
+   \begin{pmatrix}
+       0 & 1 \\
+       1 & 1
+   \end{pmatrix} ^{n + 1}  \mathit{Fib}.0
+\]
+
+The same approach can be used for $f$. We define a function $F: \mathbb{N}  \rightarrow \mathbb{N}^4$ into the four-dimensional space $\mathbb{N}^4$:
+
+\[
+  F.n = 
+  \begin{pmatrix}
+       \mathit{fib}.n \\
+       \mathit{fib}.(n + 1) \\
+       f.n \\
+       f.(n + 1)
+   \end{pmatrix}   \text{, for } n \geq 0 
+\]
+
+For a recursive expression for $F$ we have:
+\[
+\begin{array}{lcl}
+  &&F.(n + 1) \\
+   &=& { < \text{definition of  } F\ >} \\ 
+  &&\begin{pmatrix}
+       \mathit{fib}.(n + 1) \\
+       \mathit{fib}.(n + 2) \\
+       f.(n + 1) \\
+       f.(n + 2)
+   \end{pmatrix} \\
+   &=& { < \text{definitions of  } \mathit{fib} \text{ and } f \ >} \\ 
+   &&\begin{pmatrix}
+      \mathit{fib}.(n + 1) \\
+       \mathit{fib}.(n + 1) + \mathit{fib}.n\\
+       f.(n + 1) \\
+       f.(n + 1) + f.n + \mathit{fib}.(n + 1)
+   \end{pmatrix} \\
+   &=& { < \text{matrix multiplication}  >} \\ 
+   &&\begin{pmatrix}
+       0 & 1 & 0 & 0\\
+       1 & 1 & 0 & 0\\
+       0 & 0 & 0 & 1\\
+       0 & 1 & 1 & 1
+   \end{pmatrix} 
+   \begin{pmatrix}
+         \mathit{fib}.n \\
+       \mathit{fib}.(n + 1) \\
+       f.n \\
+       f.(n + 1)
+   \end{pmatrix} \\
+   &=& { < \text{definition of  } F\ >} \\ 
+   &&\begin{pmatrix}
+       0 & 1 & 0 & 0\\
+       1 & 1 & 0 & 0\\
+       0 & 0 & 0 & 1\\
+       0 & 1 & 1 & 1
+   \end{pmatrix} F.n
+  \end{array}
+\]
+and
+\[
+  F.(n + 1) = 
+  \begin{pmatrix}
+        0 & 1 & 0 & 0\\
+       1 & 1 & 0 & 0\\
+       0 & 0 & 0 & 1\\
+       0 & 1 & 1 & 1
+   \end{pmatrix}   F.n = \ldots = 
+   \begin{pmatrix}
+       0 & 1 & 0 & 0\\
+       1 & 1 & 0 & 0\\
+       0 & 0 & 0 & 1\\
+       0 & 1 & 1 & 1
+   \end{pmatrix} ^{n + 1} F.0
+\]
+
+Calculating $F.n$ also calculates $f.n$ so if we can calculate $F.n$ faster than linear we also solve the original problem faster than linear. $F.n$ is basically an exponentiation so let's look at the exponentiation function $exp(x, n) = x^n$. The following recursive expression holds for $exp$:
+
+\begin{equation*}
+ exp.x.n = 
+ \begin{cases}
+ exp. (x \ x).(n / 2) & \text{if } n = 0 \text{ mod } 2 \\
+ x \ exp.x.(n - 1) & \text{if }n = 1 \text{ mod } 2 
+ \end{cases}
+\end{equation*}
+
+At least at every other step in the above recursion n is halved so computing $exp(x, n)$ has $O(log\ n)$ runtime which also implies $O(log\ n)$ runtime for $F$.
+
+Before we write the actual code for computing $F$ let's first see if we can find a more compact representation for the powers of matrix $A$ involved in the computation:
+
+\begin{equation*}
+A = 
+\begin{pmatrix}
+       0 & 1 & 0 & 0\\
+       1 & 1 & 0 & 0\\
+       0 & 0 & 0 & 1\\
+       0 & 1 & 1 & 1
+       \end{pmatrix}
+\end{equation*}
+
+We are searching for patterns in the powers of $A$:
+\begin{equation*}
+A^2 = 
+\begin{pmatrix}
+       1 & 1 & 0 & 0\\
+       1 & 2 & 0 & 0\\
+       0 & 1 & 1 & 1\\
+       1 & 2 & 1 & 2
+       \end{pmatrix},\ A^3 =
+ \begin{pmatrix}
+       1 & 2 & 0 & 0\\
+       2 & 3 & 0 & 0\\
+       1 & 2 & 1 & 2\\
+       2 & 5 & 2 & 3
+       \end{pmatrix},\ A^4 =
+ \begin{pmatrix}
+       2 & 3 & 0 & 0\\
+       3 & 5& 0 & 0\\
+       2 & 5 & 2 & 3\\
+       5 & 10 & 3 & 5
+       \end{pmatrix}
+\end{equation*}
+
+We make the conjecture that $A^k$ for any natural $k$ is of the form:
+
+\begin{equation}\label{tuplerep}
+A^k = 
+\begin{pmatrix}
+       a & b & 0 & 0\\
+       b & a + b & 0 & 0\\
+       c & d & a & b\\
+       e & f & b & a + b
+       \end{pmatrix}, \text{ for some } a, b, c, d, e, f \in \mathbb{N}
+\end{equation}
+
+and prove this by induction. The base case for $k = 1$ is established with values $(0, 1, 0 , 0, 0 ,1)$ for $(a, b, c, d, e, f)$. Assuming that the conjecture holds for $A^k$ we look at $A^{k + 1}$ and get:
+
+\begin{equation*}
+A^{k + 1} = A^k\ A = 
+\begin{pmatrix}
+       b & a + b & 0 & 0\\
+       a + b & a + 2 b & 0 & 0\\
+       d & b + c + d & b & a + b\\
+       f & a + b + e + f & a + b & a + 2 b
+       \end{pmatrix}
+\end{equation*}
+
+so $A^{k + 1}$ has the same form as stated in the conjecture if we substitute $(b, a + b, d, b + c + d, f, a + b + e + f)$  for $(a, b, c, d, e, f)$. This proves conjecture (\ref{tuplerep}).
+
+It means that in our program we can use a tuple representation $(a, b, c, d, e, f)$ of 6 values instead of the whole 16 values to represent the powers of $A$. We need to define multiplication in this tuple space consistent with the matrix multiplication:
+
+\begin{equation*}
+\begin{split}
+(a, b, c, d, e, f) & (a', b', c', d', e',f') =  \\ 
+( & a a' + b b', \\
+   & a b' + b (a' + b'), \\
+   & c a' + d b' + a c' + b e', \\
+   & c b' + d (a' + b') + a d' + b f', \\
+   & e a' + f b' + b c' + (a + b) e', \\
+   & e b' + f (a' + b') + b d' + (a + b) f' )
+\end{split}   
+\end{equation*}
+
+We read this definition off the matrix multiplication:
+
+\begin{equation*}
+\begin{pmatrix}
+       a & b & 0 & 0\\
+       b & a + b & 0 & 0\\
+       c & d & a & b\\
+       e & f & b & a + b
+       \end{pmatrix}
+  \begin{pmatrix}
+       a' & b' & 0 & 0\\
+       b' & a' + b' & 0 & 0\\
+       c' & d' & a' & b'\\
+       e' & f' & b' & a' + b'
+       \end{pmatrix}     
+\end{equation*}
+
+The last expression we need is:
+
+\begin{equation*}
+A^n F.0 = \begin{pmatrix}
+       a & b & 0 & 0\\
+       b & a + b & 0 & 0\\
+       c & d & a & b\\
+       e & f & b & a + b
+       \end{pmatrix} 
+ \begin{pmatrix}
+       0\\
+       1\\
+       0\\
+       0
+       \end{pmatrix}   = 
+    \begin{pmatrix}
+       b\\
+       a + b\\
+       d\\
+        f
+       \end{pmatrix}    
+\end{equation*} 
+
+so we are interested in $d$ which corresponds to the $F.n$ coordinate of the vector.      
+
+Putting all the pieces together we get the final Haskell program:
+
+\lstinputlisting[language=Haskell, basicstyle=\small, frame=trBL, caption={Haskell code}]{fibolucci.hs}
+
+\bibliographystyle{plainnat}
+\bibliography{../common/math}
+
+\end{document}
+

@@ -1,0 +1,31 @@
+hamming[r_Integer] := 
+ Transpose[ Table[IntegerDigits[i, 2, r], {i, 1, 2^r - 1}]]
+
+r = 6;
+
+h = hamming[6];
+
+pos[w_] := 
+ With[{s =  Mod[h.w, 2]}, 
+  UnitVector[2^Length[s] - 1, FromDigits[s, 2]]]
+
+friendOne[cb_List, ms_Integer] := Module[{em, y, ey},
+  em = UnitVector[2^r - 1, ms];
+  y = Mod[cb - em, 2];
+  ey = pos[y];
+  z = Mod[cb - ey, 2]
+  ]
+
+friendTwo[cb_List] := Position[pos[cb], 1][[1, 1]]
+
+rw :=  RandomInteger[1, {2^r - 1}]
+
+cb = rw;
+
+ms = 26;
+
+z = friendOne[cb, ms];
+
+friendTwo[z]
+
+26

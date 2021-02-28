@@ -1,0 +1,81 @@
+\documentclass[justified, openany]{tufte-book}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{blindtext}
+\usepackage{todonotes}
+
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+
+% turn on numbering for parts and chapters
+
+\usepackage{amsthm, amsmath, amssymb}
+\usepackage{setspace, graphicx, enumerate}
+
+\usepackage{stmaryrd}
+
+% For nicely typeset tabular material
+\usepackage{booktabs}
+
+\usepackage{listings}
+\lstloadlanguages{Haskell}
+
+\usepackage{permute}
+
+\newcommand{\monthyear}{%
+  \ifcase\month\or January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or
+  December\fi\space\number\year
+}
+
+% For graphics / images
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\fvset{fontsize=\normalsize}
+\usepackage{xspace}
+
+\usepackage{pgf, tikz}
+\usetikzlibrary{arrows,automata,decorations.pathmorphing,backgrounds,positioning,fit,petri,shapes.geometric,calc}
+
+\usepackage{units}
+
+\usepackage{bibentry}
+
+\usepackage{tcolorbox}
+
+\usepackage{enumitem}
+
+\usepackage{bm}
+
+\usepackage{mmacells}
+
+\usepackage{pdfpages}
+
+\usepackage[nottoc]{tocbibind}
+
+\theoremstyle{plain}% default 
+\newtheorem{thm}{Theorem}[chapter] 
+\newtheorem{lem}[thm]{Lemma} 
+\newtheorem{prop}[thm]{Proposition} 
+\newtheorem*{cor}{Corollary} 
+
+\theoremstyle{definition} 
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{exmp}[thm]{Example}
+\newtheorem{exer}[thm]{Exercise}
+
+\newtheorem{proofpart}{Proof Part}[thm]
+
+\theoremstyle{remark} 
+\newtheorem*{rem}{Remark} 
+\newtheorem*{note}{Note} 
+\newtheorem{case}{Case}
+
+\newtcolorbox{problem}{title={Problem}}
+
+\newenvironment{dedication}
+    {\vspace{6ex}\begin{quotation}\begin{center}\begin{em}\begin{large}}
+    {\par\end{large}\end{em}\end{center}\end{quotation}}
+
