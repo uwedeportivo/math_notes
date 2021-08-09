@@ -676,13 +676,13 @@ $$
 \noindent $D$ is a vertex cover and $C$ is a minimum vertex cover, so $|D| \geq |C|$. It follows that $|C| \geq |M| \geq |D| \geq |C|$ which means $|C| = |M|$.
 \end{proof}
 
+This solves the problem in this note. The number of satisfied viewers is $|V| - |M|$, where $V$ is the set of vertices in the bipartite graph $G$ of votes with their conflicts as edges and $M$ is a maximum matching in $G$ computed with the Ford-Fulkerson algorithm taking advantage of the min-max duality shown in Figure \ref{minmax_duality}.
+
 \begin{marginfigure}
     \includegraphics[scale=0.5]{flowcutminmax.pdf}
     \caption{Min-max duality in bipartite graphs and corresponding networks.}
 	\label{minmax_duality}
 \end{marginfigure}{}
-
-This solves the problem in this note. The number of satisfied viewers is $|V| - |M|$, where $V$ is the set of vertices in the bipartite graph $G$ of votes with their conflicts as edges and $M$ is a maximum matching in $G$ computed with the Ford-Fulkerson algorithm taking advantage of the min-max duality shown in Figure \ref{minmax_duality}.
 
 Here is a similar problem: There are bridges running from one side of a river to the other side. The bridges are laid out in a random fashion. Given the coordinates of all the bridges, find the largest set of non-intersecting bridges. 
 
