@@ -1,0 +1,204 @@
+\input{../common/common.tex}
+
+\title{Math notes - While a}
+\author{Uwe Hoffmann}
+\hypersetup{colorlinks, pdftitle={Math notes - While a}}
+
+\newtheorem{thminv}{Invariant}[chapter] 
+
+\begin{document}
+
+\setcounter{chapter}{1}
+\section*{While a}
+
+\newthought{Loop invariants} is the topic of the problem \footnote{Problem 4 on page 9 from \bibentry{engel2013problem}} in this note.\index{loop invariants}
+
+
+\vspace{10 mm}
+\begin{problem}
+We start with the state $(a, b)$ where $a$, $b$ are positive integers. To this initial state we apply the following algorithm:
+
+\begin{lstlisting}[language=Python, basicstyle=\small, label={lst:while_loop}, frame=trBL]
+while a > 0:
+   if a < b:
+      (a,b) = (2a, b - a)
+   else:
+      (a,b) = (a - b, 2b) 
+\end{lstlisting}
+
+For which starting positions does the algorithm stop? In how many steps does it stop,
+if it stops? What can you tell about periods and tails?
+
+\end{problem}
+
+We start with $a > 0$ and $b > 0$. We adopt the following notation: $a_i$, $b_i$ are the values after $i \in \mathbb{N}_{\geq 0}$ times through the loop. Before the first time through the loop $a_0 = a$, $b_0 = b$. Let $n = a + b$.
+
+Let's collect some invariants. We will prove all of them by induction on $i \in \mathbb{N}_{\geq 0}$.
+
+\begin{thminv}\label{p1}
+$$
+  \forall i \geq 0: a_i + b_i = n
+$$
+\end{thminv}
+
+\begin{proof}
+Base case $a_0 + b_0 = a + b = n$ holds by definition of $n$ and $(a_0, b_0)$.
+Assume $a_i + b_i = n$. For $a_{i+1} + b_{i+1}$ we have two cases:
+
+Case $a_i < b_i$: Here we have $a_{i+1} = 2 a_i$ and $b_{i+1} = b_i - a_i$. So
+
+$$
+a_{i+1} + b_{i+1} = 2 a_i + b_i - a_i = a_i + b_i = n
+$$
+
+Case $a_i \geq b_i$: In this case we have  $a_{i+1} = a_i - b_i$ and $b_{i+1} = 2 b_i$. It follows
+
+$$
+a_{i+1} + b_{i+1} = a_i - b_i + 2 b_i = a_i + b_i = n
+$$
+
+\end{proof}
+
+\begin{thminv}\label{p2}
+$$
+  \forall i \geq 0: b_i > 0
+$$
+\end{thminv}
+
+\begin{proof}
+This follows almost immediately from definitions \footnote{
+Base case $b_0 = b > 0$ holds by definition of $b$. Assume $b_i > 0$. Again we have two cases. If $a_i < b_i$ then $b_{i+1} = b_i - a_i > 0$. 
+If $a_i \geq b_i$ then $b_{i+1} = 2 b_i > 0$.
+}.
+
+\end{proof}
+
+\begin{thminv}\label{p3}
+$$
+  \forall i \geq 0: a_i \geq 0
+$$
+\end{thminv}
+
+\begin{proof}
+This also follows from definitions \footnote{
+Base case $a_0 = a > 0$ holds by definition of $a$. Assume $a_i \geq 0$. Again we have two cases. If $a_i < b_i$ then $a_{i+1} = 2 a_i \geq 0$. 
+If $a_i \geq b_i$ then $a_{i+1} = a_i - b_i \geq 0$.
+}.
+
+\end{proof}
+
+
+\begin{thminv}\label{p4}
+$$
+  \forall i \geq 0: a_i \equiv 2^i a \mod n
+$$
+\end{thminv}
+
+\begin{proof}
+Base case $a_0 = a = 2^0 a$ trivially holds.
+Assume $a_i \equiv 2^i a \mod n$. For $a_{i+1}$ we have two cases:
+
+Case $a_i < b_i$: Here we have $a_{i+1} = 2 a_i$. So
+
+\begin{align*}
+  a_{i+1} &= 2 a_i \\
+  &\equiv 2 \cdot 2^i a \mod n \\
+  &\equiv 2^{i+1} a \mod n
+\end{align*}
+
+Case $a_i \geq b_i$: In this case we have  $a_{i+1} = a_i - b_i$. It follows
+
+\begin{align*}
+  a_{i+1} &= a_i - b_i \\
+  &\equiv a_i + n - b_i \mod n \\
+  &\equiv a_i + a_i + b_i - b_i \mod n \\
+  &\equiv 2 a_i \mod n \\
+  &\equiv 2 \cdot 2^i a \mod n \\
+  &\equiv 2^{i+1} a \mod n  
+\end{align*}
+
+\end{proof}
+
+We will use these 4 invariants ($a_i \geq 0$, $b_i > 0$, $a_i + b_i = n$ and $a_i \equiv 2^i a \mod n$) to determine for which initial values $a$ and $b$ the loop terminates. To do so we consider $\frac{a}{n}$. Because $0 < a < n$ we know that $\frac{a}{n} \in (0, 1)$. We look at the expansion of $\frac{a}{n}$ in base $2$.
+
+\begin{thm}
+If the expansion of $\frac{a}{n}$ is finite with $k$ digits $d_i \in \{0, 1\}$
+
+$$
+  \frac{a}{n} = \sum_{i = 1}^k d_i 2^{-i}
+$$
+
+then $a_k = 0$ and the loop terminates after $k$ steps.
+\end{thm}
+
+\begin{proof}
+
+From 
+
+$$
+  \frac{a}{n} = \sum_{i = 1}^k d_i 2^{-i}
+$$
+
+we get by multiplying both sides with $2^k n$:
+
+$$
+  2^k a = \sum_{i = 1}^k n d_i 2^{k-i} \equiv 0 \mod n
+$$
+
+Together with invariant \ref{p4} we get
+
+$$
+  a_k \equiv 2^k a \equiv 0 \mod n
+$$
+
+and because $a_k \geq 0$, $b_k > 0$, $a_k + b_k = n$ we know that $0 \leq a_k < n$, so it must be that $a_k=0$ and the loop terminates after at most $k$ steps. To show that the loop terminates after exactly $k$ steps, we need to show that $a_j > 0$ for $0 \leq j < k$. We will do this by finding a contradiction. Assume there exists a $j < k$ such that $a_j = 0$. Then it also holds that $2^j a \equiv 0 \mod n$.
+
+From 
+
+$$
+  \frac{a}{n} = \sum_{i = 1}^k d_i 2^{-i}
+$$
+
+we get by multiplying both sides with $2^j n$:
+
+$$
+  2^j a = \sum_{i = 1}^k n d_i 2^{j-i} = \sum_{i = 1}^j n d_i 2^{j-i} + \sum_{i = j+1}^k n d_i 2^{j-i} \equiv 0 \mod n
+$$
+
+$2^j a \equiv 0 \mod n$, so $2^j a = n q$ for some $q \in \mathbb{Z}$. Then
+
+$$
+  q = \sum_{i = 1}^j d_i 2^{j-i} + \sum_{i = j+1}^k d_i 2^{j-i}
+$$
+
+We have $q \in \mathbb{Z}$, $\sum_{i = 1}^j d_i 2^{j-i} \in \mathbb{Z}$, but $\sum_{i = j+1}^k d_i 2^{j-i} \notin \mathbb{Z}$, because $d_i \in \{0, 1\}$. This is a contradiction.
+
+\end{proof}
+
+We arrived at a neat result: if the binary expansion of $\frac{a}{a+b}$ is finite with $k$ digits, then the loop terminates after $k$ steps.
+
+What can we say if the expansion is not finite but instead has a repeating pattern with a prefix and a period (the only other option \footnote{That is because $\frac{a}{a+b} \in \mathbb{Q}$.}) ? For starters, we can use a contradiction similar to the earlier one to prove that the loop does not terminate. Consider the infinite binary expansion:
+
+$$
+  \frac{a}{n} = \sum_{i = 1}^\infty d_i 2^{-i}
+$$
+
+Assume there is a $k$ for which $a_k = 0$. Then by multiplying the expansion with $2^k n$ we get:
+
+$$
+  2^k a = \sum_{i = 1}^k n d_i 2^{k-i} + \sum_{i = k+1}^\infty n d_i 2^{k-i} \equiv 0 \mod n
+$$
+
+So for some $q \in \mathbb{Z}$ such that $2^k a = n q$ we have
+
+$$
+  q = \sum_{i = 1}^k d_i 2^{k-i} + \sum_{i = k+1}^\infty d_i 2^{k-i}
+$$
+
+The left side and the first sum on the right both belong to $\mathbb{Z}$ but the second sum does not, which is a contradiction. This means, that $\forall k: a_k > 0$ and the loop does not terminate.
+
+\bibliographystyle{plainnat}
+\bibliography{../common/math}
+
+\end{document}
+
