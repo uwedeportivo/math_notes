@@ -1,0 +1,122 @@
+\newthought{Integer equations} and multisets are the topics of the problem \footnote{Variation of Problem 1-72. on page 45 in \bibentry{loehr2017combinatorics}} in this note.\index{integer equation}\index{multiset}
+
+\vspace{10 mm}
+\begin{problem}
+Determine the number of subsets of size $k$ from set $\{1, 2, \ldots, n\}$ that do not contain consecutive integers.
+\end{problem}
+
+The number of subsets of size $k$ from set $\{1, 2, \ldots, n\}$ (without any constraints) is given by the binomial coefficient $\binom{n}{k}$. Each subset of size $k$ can be represented as a word of length $n$ from alphabet $\{\bigstar, \talloblong\}$ with $k$ $\talloblong$'s and $n-k$ $\bigstar$'s: if $i$ is in the subset then the corresponding word has a $\talloblong$ at position $i$ otherwise it has a $\bigstar$ at position $i$. This representation is clearly a bijection. The constraint of no consecutive integers in a subset implies no adjacent $\talloblong$'s in the corresponding word\footnote{For example given set $\{1, 2, 3, 4\}$ the subset $\{2, 4\}$ corresponds to $\bigstar\talloblong\bigstar\talloblong$. The subset $\{1, 2\}$ has consecutive integers and corresponds to $\talloblong\talloblong\bigstar\bigstar$. The reason why we chose $\talloblong$ to indicate inclusion into a subset will become clear soon.}.
+
+We will now associate words from $\{\bigstar, \talloblong\}^n$ with other combinatorial objects: the integer equations.
+
+\begin{defn}
+Given fixed integers $m > 0$ and $t \geq 0$ a sequence $(z_1, z_2, \ldots, z_m)$ is an \textbf{integer equation} if $\forall i: 1 \leq i \leq m: z_i \in \mathbb{N}_0$ and
+$$
+\sum_{i = 1}^m z_i = t
+$$
+The number $t$ is called the \textbf{target}	of the integer equation.
+\end{defn}
+
+Note that these are sequences and order matters. From an integer equation $(z_1, z_2, \ldots, z_m)$ we construct a $\{\bigstar, \talloblong\}^{t + m - 1}$ word in the following way: start with $z_1$ number of $\bigstar$'s, then a $\talloblong$, then $z_2$ number of $\bigstar$'s, then a $\talloblong$ and so on finishing with the $z_m$ number of $\bigstar$'s which are \textbf{not} followed by a $\talloblong$. The word will contain exactly $t$ $\bigstar$'s and they will need exactly $m - 1$ $\talloblong$ separators to know which stars belong to which $z_i$. It's easy to verify that this encoding is also a bijection\footnote{As an example let $m = 5$ and target $t = 10$. The sequence $(1, 2, 1, 3, 3)$ is an integer equation since 
+$$
+1 + 2 + 1 + 3 + 3 = 10
+$$ 
+and it corresponds to the word 
+$$
+\bigstar\talloblong\bigstar\bigstar\talloblong\bigstar\talloblong\bigstar\bigstar\bigstar\talloblong\bigstar\bigstar\bigstar
+$$
+This in turn corresponds to the subset $\{2, 5, 7, 11\}$ of set $\{1, \ldots, 14\}$.}.
+
+\begin{lem}\label{consec_ints_association}
+If we set $t = n - k$ (the number of $\bigstar$'s) and from $t + m - 1 = n$ we get $m = k + 1$ (the word length) then we can associate subsets of size $k$ from set $\{1, 2, \ldots, n\}$ with integer equations $(z_1, z_2, \ldots, z_{k + 1})$ for target $n - k$. The constraint of not having consecutive integers in the subsets translates to integer equations $(z_1, z_2, \ldots, z_{k + 1})$ where $z_i > 0$ except for $z_1$ and $z_{k + 1}$ (the first and the last in the sequence). This follows from the encoding not allowing adjacent $\talloblong$'s so there need to be $\bigstar$'s separating the $\talloblong$'s.
+\end{lem}
+
+According to this association if we can count the number of integer equations with all but the first and last $z_i$ strictly positive then we also have the number of subsets with no consecutive integers. To get there we will first count the number of anagrams, then the number of multisets, then the number of integer equations and finally the number of integer equations with all but the first and last $z_i$ strictly positive. In what follows we will use $n$ and $k$ for other things before we bring it back in the end to our initial problem.
+
+Let's start this journey with anagrams. Let $\{s_1, s_2, \ldots, s_k\}$ be an alphabet of distinct symbols. We can build words with these symbols, for example $s_2s_2s_1s_3s_3s_1$. As a notational convenience $s_is_is_i \ldots s_i=s_i^j$ if $s_i$ appears $j$ consecutive times in a word, so the example would be $s_2^2s_1s_3^2s_1$.
+
+\begin{defn}
+A word is an \textbf{anagram}\footnote{For example given word $a^2b$ the words $aba$ and $baa$ are anagrams of it. The word $abb$ is not.} of $s_1^{n_1}s_2^{n_2} \ldots s_k^{n_k}$ with $n_i > 0$ if it is a word containing exactly $n_i$ number of $s_i$ symbols for each $1 \leq i \leq k$. We denote with $\mathcal{A}(s_1^{n_1}s_2^{n_2} \ldots s_k^{n_k})$ the set of all anagrams of $s_1^{n_1}s_2^{n_2} \ldots s_k^{n_k}$.
+\end{defn}
+
+\begin{thm}\label{num_anagrams}
+Given the set of anagrams $\mathcal{A}(s_1^{n_1}s_2^{n_2} \ldots s_k^{n_k})$  let $n = \sum_{i = 1}^k n_k$. Then
+$$
+|\mathcal{A}(s_1^{n_1}s_2^{n_2} \ldots s_k^{n_k})| = \binom{n}{n_1,n_2, \ldots, n_k}
+$$	
+where $\binom{n}{n_1,n_2, \ldots, n_k}$ is the multinomial coefficient\footnote{The multinomial coefficient is defined as
+$$
+\binom{n}{n_1,n_2, \ldots, n_k} = \frac{n!}{\prod_{i = 1}^k n_i!}
+$$}.
+\end{thm}
+
+\begin{proof}
+We have $n$ positions in our word that we need to fill with symbols. We are going to make the following choices: first we choose $n_1$ positions from those $n$ positions where we fill in the symbol $s_1$. Then we choose the $n_2$ positions from the remaining unfilled positions where we fill in $s_2$ and so on. In total we make $k$ such choices and the number of remaining unfilled positions at each stage is independent of the previous choices, so the multiplication rule applies. For our first symbol $s_1$ we have $\binom{n}{n_1}$ possibilities, for our second symbol we have $\binom{n - n_1}{n_2}$ possibilities and so on. Because of the multiplication rule the total number of choices is the product of all these binomial coefficients, so
+$$
+|\mathcal{A}(s_1^{n_1}s_2^{n_2} \ldots s_k^{n_k})| = \prod_{i = 1}^k \binom{n - (\sum_{j = 1}^{i - 1})}{n_i}
+$$
+
+Expanding\footnote{After the binomial coefficients are expanded the product becomes a telescoping product that simplifies to exactly the multinomial coefficient.} the binomial coefficients on the right-hand side into factorials according to the binomial coefficient definition and simplifying the expression gives us the desired result.
+\end{proof}
+
+We move on to \textbf{multisets}. Informally multisets are sets (order does not matter) where each element can appear more than once. So given a set $A$ (the alphabet) a multiset is a tuple of $A$ together with a function $\mu: A \mapsto \mathbb{N}$ that determines how often an element $a \in A$ appears in the multiset. For notational convenience we will use curly braces and list elements (with exponents if they appear more than once). For example $\{a^2, b, c^4\}$ is a multiset where $a$ appears twice, $b$ once and $c$ four times. Note that order does not matter, so $\{a^2, b, c^4\}$ is the same multiset as $\{b, a^2, c^4\}$. The size of the multiset is the number of elements in it with elements appearing more than once counted accordingly, so 
+$$
+|(A, \mu)| = \sum_{a \in A} \mu(a)
+$$
+
+\begin{thm}\label{num_multisets}
+The number of multisets of size $k$ from an alphabet set of size $n$ is\footnote{For example with alphabet set $\{a, b\}$ the multisets of size two are $\{a^2\}$, $\{b^2\}$, $\{a, b\}$, so there are three of them.}
+$$
+\binom{k + n - 1}{k}
+$$
+\end{thm}
+
+\begin{proof}
+We will do an encoding of multisets to anagrams similar to what we did at the beginning of this section with $\bigstar$'s and $\talloblong$'s. To avoid confusion with that previous encoding in this proof we will use the symbols $\circ$ and $|$.
+
+Let $A=\{a_1, a_2, \ldots, a_n\}$ be our alphabet. For a multiset $(A, \mu)$ with size $k$ we define the following word\footnote{The multisets from the previous example would be encoded as follows:
+\begin{align*}
+\{a^2\} & \mapsto \circ\circ|\\
+\{b^2\} & \mapsto |\circ\circ\\
+\{a, b\} & \mapsto \circ|\circ
+\end{align*}} with symbols $\{\circ,|\}$:
+$$
+\circ^{\mu(a_1)}|\circ^{\mu(a_2)}| \ldots |\circ^{\mu(a_n)}
+$$
+The first circles denote how often $a_1$ is in the multiset. They are separated by a $|$ from the circles that denote how often $a_2$ is in the multiset and so on. In total there are $k$ circles because the multiset has size $k$ and there need to be $n-1$ separators because the alphabet has size $n$ and the circles for each element need to be kept apart. It's easy to see that we have defined a bijection from the set of multisets of size $k$ with alphabet of size $n$ to the set of anagrams $\mathcal{A}(\circ^k|^{n-1})$. From theorem \ref{num_anagrams} we already know how to count the size of $\mathcal{A}(\circ^k|^{n-1})$ and with the bijection it proves this theorem.
+\end{proof}
+
+Our next stop are the number of integer equations. Given $m$ and $t$ how many integer equations $(z_1, z_2, \ldots, z_m)$ for target $t$ are there?
+
+\begin{thm}\label{num_int_equations}
+The number of integer equations $(z_1, z_2, \ldots, z_m)$ for target $t$ is
+$$
+\binom{t + m - 1}{t}
+$$
+\end{thm}
+
+\begin{proof}
+We will associate a multiset with each integer equation\footnote{For example with $m = 5$ and target $t = 10$ the integer equation $(1, 2, 1, 3, 3)$ would correspond to multiset $\{1, 2^2, 3, 4^3, 5^3\}$.}. The multiset will contain the element $i$ $z_i$ many times, for $1 \leq i \leq m$. Again it can be checked that this defines a bijection. These multisets belong to the set of multisets of size $t$ from an alphabet of size $m$ and theorem \ref{num_multisets} counts them. By the bijection rule we have proven this theorem.
+\end{proof}
+
+We are almost done. In the beginning of this section we encoded our subsets without consecutive integers as integer equations with all but the first and last summand strictly positive. So we need to count these types of integer equations with this constraint.
+
+\begin{thm}\label{num_int_equations_pos}
+The number of integer equations $(y_1, y_2, \ldots, y_m)$ for target $t$ with $y_i > 0$ for all $1 < i < m$ is 
+$$
+\binom{t + 1}{m - 1}
+$$
+\end{thm}
+
+\begin{proof}
+For an integer equation $(y_1, y_2, \ldots, y_m)$ we have $\sum_{i = 1}^m y_i = t$ and $y_i > 0$ for all $1 < i < m$. So we can write
+$$
+y_1 + \sum_{i = 2}^{m-1} (y_i - 1) + y_m = t - (m - 2)
+$$
+This shows that we can transform the integer equations with the strictly positive constraints into normal integer equations without constraints but with a new target. This again is a bijection. We know how to count these from theorem \ref{num_int_equations}. The new target is $t - m + 2$. Plugging it in we get 
+$$
+\binom{t - m + 2 + m - 1}{m - 1} = \binom{t + 1}{m - 1}
+$$
+\end{proof}
+
+Using \ref{num_int_equations_pos} and $t = n - k$ and $m = k + 1$ as described by our association \ref{consec_ints_association} of subsets of size $k$ without consecutive integers from set $\mathbb{N}_n$ to integer equations with all but the first and last strictly positive terms, we are finally able to solve the problem in this section. The answer is $\binom{n - k + 1}{k}$.

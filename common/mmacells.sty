@@ -13,7 +13,7 @@
 
 \RequirePackage{expl3,xparse}
 
-\ProvidesExplPackage {mmacells} {2015/04/08} {0.2.0}
+\ProvidesExplPackage {mmacells} {2017/01/03} {0.3.2}
   {Mathematica front end cells}
 
 \RequirePackage{amsmath,bbm}
@@ -91,6 +91,7 @@
 \bool_new:N \g_mmacells_previous_intype_bool
 
 \bool_new:N \l_mmacells_uselist_bool
+\bool_new:N \l_mmacells_uselistings_bool
 \bool_new:N \l_mmacells_indexed_bool
 \bool_new:N \l_mmacells_intype_bool
 \bool_new:N \l_mmacells_formatted_bool
@@ -128,6 +129,9 @@
 \tl_new:N \l__mmacells_math_replacements_tl
 \tl_new:N \l__mmacells_math_replacements_bold_tl
 
+\cs_new:Npn \__mmacells_fv_formatline:n #1 { #1 }
+\cs_generate_variant:Nn \__mmacells_fv_formatline:n { V }
+
 \cs_new_nopar:Npn \__mmacells_prepare_verbatimenv: { }
 \cs_new_nopar:Npn \__mmacells_begin_verbatimenv: { }
 \cs_new_nopar:Npn \__mmacells_end_verbatimenv: { }
@@ -138,7 +142,7 @@
 \cs_generate_variant:Nn \coffin_typeset:Nnnnn { NVVVV }
 
 
-\cs_new_protected:Npn \mmacells_define_annotation:nnnnn #1#2#3#4#5
+\cs_new_protected:Npn \mmacells_define_idlistless_annotation:nnnn #1#2#3#4
   {
     \exp_args:Nc \NewDocumentCommand { mma#1 } { m }
       { \mmacells_typeset_formatted:cn { mmacells_format_#2:n } { ##1 } }
@@ -150,8 +154,13 @@
         #2style .code:n = \mmacells_set_formatting_function:nn { #2 } { ##1 },
       }
     
-    \mmacells_define_annotation_keys:nnnnnn
-      { #1 } { } { #2 } { #3 } { #4 } { #5 }
+    \__mmacells_register_lst_annotation:nnnn { #1 } { } { #3 } { #4 }
+  }
+
+\cs_new_protected:Npn \mmacells_define_annotation:nnnnn #1#2#3#4#5
+  {
+    \mmacells_define_idlistless_annotation:nnnn { #1 } { #2 } { #3 } { [#5] }
+    \__mmacells_define_idlist_keys:nnn { #2 } { #3#4 } { #5 }
   }
 \cs_generate_variant:Nn \mmacells_define_annotation:nnnnn { nnnnV }
 
@@ -168,21 +177,25 @@
           }
       }
     
-    \mmacells_define_annotation_keys:nnnnnn
-      { #1 } { * } { #2 } { #3 } { #4 } { #5 }
+    \__mmacells_register_lst_annotation:nnnn { #1 } { * } { #3 } { [#5] }
+    \__mmacells_define_idlist_keys:nnn { #2 } { #3#4 } { #5 }
   }
 
-\cs_new_protected:Npn \mmacells_define_annotation_keys:nnnnnn #1#2#3#4#5#6
+\cs_new_protected:Npn \__mmacells_define_idlist_keys:nnn #1#2#3
   {
     \keys_define:nn { mmacells }
       {
-        #3       .meta:n = { morelst = { #4#5       = {[#6] ##1 } } },
-        more#3   .meta:n = { morelst = { more#4#5   = {[#6] ##1 } } },
-        delete#3 .meta:n = { morelst = { delete#4#5 = {[#6] ##1 } } },
+        #1       .meta:n = { morelst = { #2       = {[#3] ##1 } } },
+        more#1   .meta:n = { morelst = { more#2   = {[#3] ##1 } } },
+        delete#1 .meta:n = { morelst = { delete#2 = {[#3] ##1 } } },
       }
+  }
+
+\cs_new_protected:Npn \__mmacells_register_lst_annotation:nnnn #1#2#3#4
+  {
     \__mmacells_clist_put_right:Nncn
       \l_mmacells_frontendin_style_lst_keyval_clist
-      { #4style=[#6] } { mma#1 } { #2 }
+      { #3style=#4 } { mma#1 } { #2 }
     
     \__mmacells_clist_put_right:Nncn \l_mmacells_annotations_lst_keyval_clist
       { moredelim=[is][ } { mma#1 } { #2]{\\mma#1\{}{\}} }
@@ -206,20 +219,34 @@
   }
 
 
-\cs_new_protected_nopar:Npn \__mmacells_prepare_verbatim_keyval:
+\cs_new_protected_nopar:Npn \__mmacells_prepare_formatted_keyval:
   {
-    \bool_if:NT \l_mmacells_formatted_bool
+    \clist_put_left:Nn
+      \l_mmacells_fv_keyval_clist
       {
-        \clist_put_left:Nn
-          \l_mmacells_fv_keyval_clist
-          {
-            commandchars=\\\{\},
-            formatcom*={\everymath{\displaystyle}},
-          }
+        commandchars=\\\{\},
+        formatcom*={\everymath{\displaystyle}},
+      }
+    \bool_if:NT \l_mmacells_uselistings_bool
+      {
         \clist_put_left:NV
           \l_mmacells_lst_keyval_clist
           \l_mmacells_formatted_lst_keyval_clist
+        
+        % \left and \right commands don't work properly with listings-fancyverb
+        % interface, we can make them work by redefining them as "ordinary"
+        % document-level functions.
+        \RenewDocumentCommand \left { m } { \__mmacells_tex_left:w ##1 }
+        \RenewDocumentCommand \right { m } { \__mmacells_tex_right:w ##1 }
       }
+  }
+
+\cs_new_eq:NN \__mmacells_tex_left:w \left
+\cs_new_eq:NN \__mmacells_tex_right:w \right
+
+\cs_new_protected_nopar:Npn \__mmacells_prepare_lst_keyval:
+  {
+    \clist_put_left:Nn \l_mmacells_lst_keyval_clist { fancyvrb=true }
     
     \__mmacells_set_message_link_literate:
     
@@ -259,15 +286,26 @@
 
 \cs_new_protected_nopar:Npn \mmacells_prepare_verbatimenv:
   {
-    \__mmacells_prepare_verbatim_keyval:
-
-    \mmacells_lst_set:V \l_mmacells_lst_keyval_clist
-
-    \mmacells_fv_set:n { formatcom* = \__mmacells_fix_labels: }
+    \bool_if:NT \l_mmacells_formatted_bool
+      { \__mmacells_prepare_formatted_keyval: }
+    
+    \bool_if:NTF \l_mmacells_uselistings_bool
+      {
+        \__mmacells_prepare_lst_keyval:
+        
+        \mmacells_lst_set:V \l_mmacells_lst_keyval_clist
+        
+        % Activating listings-fancuvrb interface moves labels of list
+        % environment, that are in the same line as Verbatim environment.
+        % \__mmacells_fix_labels: fixes this issue.
+        \mmacells_fv_set:n { formatcom* = \__mmacells_fix_labels: }
+      }
+      { \mmacells_lst_set:n { fancyvrb=false } }
+    
     \mmacells_fv_set:V \l_mmacells_fv_keyval_clist
-              
+        
     \__mmacells_wrap_fv_formatline:n { \mmacells_format_line_wrapper:n }
-
+    
     \VerbatimEnvironment
   }
 
@@ -291,6 +329,7 @@
     verbatimenv .initial:n = Verbatim,
     
     uselist .bool_set:N = \l_mmacells_uselist_bool,
+    uselistings .bool_set:N = \l_mmacells_uselistings_bool,
     postwidelabel .code:n = \cs_set:Npn \mmacells_post_wide_label: { #1 },
     postwidelabel .initial:n = { \leavevmode \@nobreaktrue \parskip=0pt },
     
@@ -392,7 +431,7 @@
     
     \bool_if:NT \l_mmacells_uselist_bool
       {
-        \begin{list}{\box_use:N \l_mmacells_label_box}{
+        \list{\box_use:N \l_mmacells_label_box}{
           \labelsep=\l_mmacells_label_sep_dim
           \leftmargin=\l_mmacells_leftmargin_dim
           \labelwidth=\l_mmacells_label_dim
@@ -412,7 +451,7 @@
   {
     \__mmacells_end_verbatimenv:
     \bool_if:NT \l_mmacells_uselist_bool
-      { \end{list} }
+      { \endlist }
   }
 
 \cs_new_protected:Npn \mmacells_cell_graphics:nnn #1#2#3
@@ -440,22 +479,36 @@
     \leavevmode
     \group_begin:
     \keys_set:nn { mmacells } { style={#2}, #1 }
-    \__mmacells_prepare_verbatim_keyval:
+    \bool_if:NTF \l_mmacells_uselistings_bool
+      { \__mmacells_prepare_lst_keyval: }
+      { \mmacells_lst_set:n { fancyvrb=false } }
     
     \bool_if:NTF \l_mmacells_formatted_bool
       {
+        \__mmacells_prepare_formatted_keyval:
         \mmacells_fv_set:V \l_mmacells_fv_keyval_clist
-        \__mmacells_fv_formatting_prep:
         \tl_set_rescan:Nnn \l_tmpa_tl { \__mmacells_fv_cat_codes: } { #3 }
       }
-      { \tl_set:Nn \l_tmpa_tl { #3 } }
+      {
+        \mmacells_fv_set:V \l_mmacells_fv_keyval_clist
+        \tl_set:Nn \l_tmpa_tl { #3 }
+      }
     
-    \__mmacells_lst_hook_pre_set:
-    \mmacells_lst_set:V \l_mmacells_lst_keyval_clist
-    \__mmacells_lst_hook_text_style:
-    \__mmacells_lst_init:n { \relax }
-    \__mmacells_lst_fv_format_inline:V \l_tmpa_tl
-    \__mmacells_lst_deinit:
+    \__mmacells_fv_formatting_prep:
+    
+    \mmacells_format_line_wrapper:n
+      {
+        \bool_if:NTF \l_mmacells_uselistings_bool
+          {
+            \__mmacells_lst_hook_pre_set:
+            \mmacells_lst_set:V \l_mmacells_lst_keyval_clist
+            \__mmacells_lst_hook_text_style:
+            \__mmacells_lst_init:n { \relax }
+            \__mmacells_lst_fv_format_inline:V \l_tmpa_tl
+            \__mmacells_lst_deinit:
+          }
+          { \tl_use:N \l_tmpa_tl }
+      }
     
     \group_end:
   }
@@ -601,9 +654,17 @@
     \hbox_set:Nn \@labels
       {
         \skip_horizontal:N \@totalleftmargin
-        \hbox_unpack_clear:N \@labels
+        \__mmacells_hbox_unpack_drop:N \@labels
       }
   }
+
+% \hbox_unpack_clear:N was renamed to \hbox_unpack_drop:N in 2019,
+% but some distributions still ship older versions of expl3.
+\if_cs_exist:N \hbox_unpack_drop:N
+  \cs_new_protected:Npn \__mmacells_hbox_unpack_drop:N { \hbox_unpack_drop:N }
+\else:
+  \cs_new_protected:Npn \__mmacells_hbox_unpack_drop:N { \hbox_unpack_clear:N }
+\fi:
 
 \cs_new_protected:Npn \__mmacells_group_insert_after:n #1
   {
@@ -614,10 +675,37 @@
 \cs_new_protected:Npn \__mmacells_wrap_fv_formatline:n #1
   {
     \cs_set_eq:NN \__mmacells_fv_formatline:n \FancyVerbFormatLine
-    \cs_set:Npn \FancyVerbFormatLine ##1
-      { #1 { \__mmacells_fv_formatline:n { ##1 } } }
-    \cs_set_eq:NN \lstFV@FancyVerbFormatLine \FancyVerbFormatLine
+    
+    \bool_if:NTF \l_mmacells_uselistings_bool
+      {
+        % ^^M characters present in argument passed to \FancyVerbFormatLine,
+        % set by listings-fancyverb interface, lead to infinite compilation.
+        % So we'll just get rid of them.
+        \cs_set:Npn \FancyVerbFormatLine ##1
+          {
+            \tl_set:Nn \l_tmpa_tl { ##1 }
+            \__mmacells_replace_carriage_return:N \l_tmpa_tl
+            #1 { \__mmacells_fv_formatline:V \l_tmpa_tl }
+          }
+        
+        % listings permanently adds code to \FV@VerbatimBegin and
+        % \FV@VerbatimEnd command (and corresponding for LVerbatim and
+        % BVerbatim). This code is executed if \FancyVerbFormatLine
+        % is equivalent to \lstFV@FancyVerbFormatLine. So if we're using
+        % listings-fancyverb interface we must make sure that those two commands
+        % are the same.
+        \cs_set_eq:NN \lstFV@FancyVerbFormatLine \FancyVerbFormatLine
+      }
+      {
+        \cs_set:Npn \FancyVerbFormatLine ##1
+          { #1 { \__mmacells_fv_formatline:n { ##1 } } }
+      }
   }
+
+\char_set_catcode_active:n { `\^^M }
+\cs_new_protected:Npn \__mmacells_replace_carriage_return:N #1
+  { \regex_replace_all:nnN { ^^M } { \c{empty} } #1 }
+\char_set_catcode_end_line:n { `\^^M }
 
 \cs_new_protected:Npn \__mmacells_clist_put_right:Nncn #1#2#3#4
   {
@@ -635,11 +723,16 @@
     morefvcmdparams=\Big 1,
     morefvcmdparams=\bigg 1,
     morefvcmdparams=\Bigg 1,
+    morefvcmdparams=\left 1,
+    morefvcmdparams=\right 1,
   }
 
 
 \mmacells_define_annotation:nnnnn
   { Def } { defined } { keyword } { s } { 1 }
+
+\mmacells_define_idlistless_annotation:nnnn { Str } { string } { string } { }
+\mmacells_define_idlistless_annotation:nnnn { Cmt } { comment } { comment } { }
 
 \mmacells_define_link_annotation:nnnnnN
   { LnT } { linktarget  } { emph } { } { 1 } \mmacells_link_target:nn
@@ -659,26 +752,38 @@
 % 
 % Using \text inside math commands that rescale arguments, since otherwise code
 % fragments processed with listings are not properly scaled in nested commands.
+% For consistency use \text in all commands.
+% \mma...M commands, with first argument processed in math mode are for special
+% cases where sub- or super-script needs to be next to argument, like in case
+% of \int.
 
 % SubscriptBox
-\NewDocumentCommand \mmaSup { m m } {\ensuremath{#1^\text{#2}}}
+\NewDocumentCommand \mmaSup { m m } {\ensuremath{\text{#1}^\text{#2}}}
+\NewDocumentCommand \mmaSupM { m m } {\ensuremath{#1^\text{#2}}}
 % SuperscriptBox
-\NewDocumentCommand \mmaSub { m m } {\ensuremath{#1_\text{#2}}}
+\NewDocumentCommand \mmaSub { m m } {\ensuremath{\text{#1}_\text{#2}}}
+\NewDocumentCommand \mmaSubM { m m } {\ensuremath{#1_\text{#2}}}
 % SubsuperscriptBox
-\NewDocumentCommand \mmaSubSup { m m m } {\ensuremath{#1_\text{#2}^\text{#3}}}
+\NewDocumentCommand \mmaSubSup { m m m }
+  {\ensuremath{\text{#1}_\text{#2}^\text{#3}}}
+\NewDocumentCommand \mmaSubSupM { m m m }
+  {\ensuremath{#1_\text{#2}^\text{#3}}}
 % UnderscriptBox
-\NewDocumentCommand \mmaUnder { m m } {\ensuremath{\underset{\text{#2}}{#1}}}
+\NewDocumentCommand \mmaUnder { m m }
+  {\ensuremath{\underset{\text{#2}}{\text{#1}}}}
 % OverscriptBox
-\NewDocumentCommand \mmaOver { m m } {\ensuremath{\overset{\text{#2}}{#1}}}
+\NewDocumentCommand \mmaOver { m m }
+  {\ensuremath{\overset{\text{#2}}{\text{#1}}}}
 % UnderoverscriptBox
 \NewDocumentCommand \mmaUnderOver { m m m }
-  {\ensuremath{\underset{\text{#2}}{\overset{\text{#3}}{#1}}}}
+  {\ensuremath{\underset{\text{#2}}{\overset{\text{#3}}{\text{#1}}}}}
 % FractionBox
 \NewDocumentCommand \mmaFrac { m m } {\ensuremath{\frac{\text{#1}}{\text{#2}}}}
 % SqrtBox
-\NewDocumentCommand \mmaSqrt { m } {\ensuremath{\sqrt{#1}}}
+\NewDocumentCommand \mmaSqrt { m } {\ensuremath{\sqrt{\text{#1}}}}
 % RadicalBox
-\NewDocumentCommand \mmaRadical { m m } {\ensuremath{\sqrt[\text{#2}]{#1}}}
+\NewDocumentCommand \mmaRadical { m m }
+  {\ensuremath{\sqrt[\text{#2}]{\text{#1}}}}
 
 
 \mmaDefineAnnotation[Und]{undefined}
@@ -700,13 +805,13 @@
   {{\fboxsep0pt\colorbox{#1}{\strut #2}}}
 
 \mmaSet{
-  lst={
-    fancyvrb,
-    language=[base]Mathematica,
-  },
+  fv={formatcom*=\normalfont\ttfamily},
+  formatline=\color{black},
+  lst={language=[base]Mathematica},
   leftmargin=4.8em,
   labelsep=.6em,
   uselist=true,
+  uselistings=true,
   definedstyle=\color{black},
   undefinedstyle=\color{mmaUndefined},
   functionlocalstyle=\color{mmaFunctionLocal},
@@ -725,6 +830,8 @@
   formattingerrorstyle={%
     \fboxsep0.3em\fcolorbox{mmaFormattingError}{mmaFormattingErrorBackground}%
   },
+  stringstyle=\color{mmaString},
+  commentstyle=\color{mmaComment},
   labelstyle=\normalfont\color{mmaLabel}\sffamily\scriptsize,
   linkstyle=\color{mmaLink},
   linkbuiltinuri=http://reference.wolfram.com/language/ref/#1.html,
@@ -733,6 +840,7 @@
     postwidelabel=\leavevmode\\,
     pole2=t,
   },
+  morepattern={\#}
 }
 
 \definecolor{mmaLabel}{RGB}{70,70,153}
@@ -751,12 +859,21 @@
 \definecolor{mmaComment}{gray}{.6}
 
 \lstdefinelanguage[base]{Mathematica}[5.2]{Mathematica}{
+  alsoletter={\#`}, % # is used in Slot identifier names.
+                    % ` is a context mark that is part of symbol names.
+  alsoother={@}, % @ is an operator.
   morestring=[b]", % " inside string is escaped by backslash.
   morecomment=[n]{(*}{*)}, % Mathematica comments can be nested.
   deletekeywords=[2]$, % $ is not a keyword.
-  morekeywords={@,_},
+  morekeywords={_},
   keywordsprefix=_, % Blank... patterns with head
 }[keywords,comments,strings,fancyvrb]
+
+% Use newly defined Mathematica language to make sure everything is properly
+% initialized. \lstset sets options only inside current group,
+% delimited by braces, so this has no effect besides initialization.
+{\lstset{language=[base]Mathematica}}
+
 \lstdefinestyle{MathematicaFrontEnd}{
   showstringspaces=false,
   columns=fullflexible,
@@ -764,7 +881,6 @@
 }
 \lstdefinestyle{MathematicaFrontEndOut}{
   style=MathematicaFrontEnd,
-  basicstyle=\normalfont\color{black}\ttfamily,
   keywordstyle=,
   stringstyle=,
   commentstyle=,
@@ -773,9 +889,6 @@
 }
 \mmaDefineFrontEndInStyle{
   style=MathematicaFrontEnd,
-  basicstyle=\normalfont\color{black}\ttfamily\bfseries,
-  stringstyle=\color{mmaString},
-  commentstyle=\color{mmaComment},
   identifierstyle=\mmaUnd,
 }
 
@@ -784,6 +897,7 @@
   intype,
   annotations,
   morelst={style=MathematicaFrontEndIn},
+  morefv={formatcom*=\bfseries},
   label={In[\mmaCellIndex]:=},
 }
 \mmaDefineCellStyle{Input}{
@@ -809,8 +923,10 @@
   style/Print,
   morelst={
     language=,
-    basicstyle=\normalfont\sffamily\small\color{mmaComment},
+    basicstyle=\color{mmaComment},
   },
+  morefv={formatcom*={\normalfont\sffamily\small}},
+  formatline=\color{mmaMessage},
   messagecolorchange,
   messagelinktype=builtin,
 }

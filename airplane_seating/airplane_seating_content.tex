@@ -1,0 +1,60 @@
+
+\vspace{10 mm}
+\begin{problem}
+ A line of $n$ airline passengers is waiting to board a plane. They each hold a ticket to one of the $n$ seats on that flight. (For convenience, let's say that the $i$th passenger in line has a ticket for the seat number $i$.) Unfortunately, the first person in line is crazy, and will ignore the seat number on their ticket, picking a random seat to occupy. All of the other passengers are quite normal, and will go to their proper seat unless it is already occupied. If it is occupied they will then find a free seat to sit in, at random. What is the probability that the last ($n$th)
+person to board the plane will sit in their proper seat (\#$n$)?
+\end{problem}
+
+Any seat arrangement under the rules of the problem is a permutation $\pi$ from the set $S_n$ of permutations of size $n$. Let's define $A_n \subseteq S_n$ the subset of permutations of size $n$ that are valid seat arrangements. 
+
+Let $B_n := \{\pi \in A_n: \pi(n) = n\}$ be the subset of $A_n$ where the last person gets their proper seat. A strategy to solve the problem would be to count $|A_n|$ and $|B_n|$ and then divide them up to get the probability. 
+
+We will use the permutation cycle notation $(i_1,i_2,\ldots,i_k)$ for a cycle of length $k$ that maps $i_1 \mapsto i_2 \mapsto \ldots i_k\mapsto i_1$. Also let $\iota_n$ be the identity permutation in $S_n$ and let $A_n^* = A_n \setminus \{\iota_n\}$ and $B_n^* = B_n \setminus \{\iota_n\}$.
+
+Let's characterize permutations in $A_n^*$.
+
+\begin{lem}\label{a_n}
+A permutation $\pi \in A_n^*$ is a cycle of the form
+\begin{equation*}
+\pi = (1, i_1, i_2,\ldots, i_k)  \text{ with } 2 \leq i_1 < i_2 < \ldots < i_k \leq n
+\end{equation*}  
+\end{lem}
+
+\begin{proof}
+
+Consider $\pi \in A_n^*$. Suppose $\pi(1) = 1$ then under the rules of the problem all other passengers can occupy their seat and $\pi =\iota_n$ which is a contradiction because $A_n^*$ doesn't have the identity permutation. So there exists a $i_1 \in \{2,\ldots,n\}$ with $\pi(1) = i_1$.  $i_1$ cannot map to any $j  <  i_1$ because under the rules of the problem every $j  < i_1$ maps to itself (every $j < i_1$ finds their seat unoccupied so they take it). So there exists a $i_2 \in \{2,\ldots,n\}$ with $i_2 >i_1$ and $i_1 \mapsto i_2$. And so on. This means that $\pi$ has at least the cycle $(1, i_1, i_2,\ldots, i_k)$ with $2 \leq i_1 < i_2 < \ldots < i_k \leq n$. It cannot have any other cycles that don't have $1$ in them because under the rules of the problem only passenger $1$ can start a seat rearrangement and all passengers not affected by that rearrangement will occupy their seat. 
+
+\end{proof}
+
+\begin{defn}\label{func}
+Let $2^{\{2,\ldots,n\}}$ be the set of all subsets of $\{2,\ldots,n\}$. The function $\varphi: 2^{\{2,\ldots,n\}} \rightarrow S_n$ is defined as:
+\begin{equation*}
+    \begin{split}
+        \varphi(\oslash) & = \iota_n \\
+        \varphi(\{i_1, i_2,\ldots, i_k\}) & =  (1, i_1, i_2,\ldots, i_k) \\
+             \text{assuming } & 2 \leq i_1 < i_2 < \ldots < i_k \leq n
+    \end{split}
+\end{equation*}
+\end{defn}
+
+$\varphi$ is a valid function because for each subset there is only one cycle possible with the monotonically increasing ordering. From lemma \ref{a_n} it then follows that  $\varphi(2^{\{2,\ldots,n\}}) = A_n$, so $|A_n| = 2^{n -1}$.
+
+For $B_n$ we apply the same arguments, except we take out the n-th passenger. A permutation $\pi' \in B_n^*$ is a cycle of the form
+
+\begin{equation*}
+\pi' = (1, i_1, i_2,\ldots, i_k)  \text{ with } 2 \leq i_1 < i_2 < \ldots < i_k \leq n -1
+\end{equation*}  
+
+and there is a function $\varphi'$ defined as 
+
+\begin{equation*}
+    \begin{split}
+        \varphi'(\oslash) & = \iota_n \\
+        \varphi'(\{i_1, i_2,\ldots, i_k\}) & =  (1, i_1, i_2,\ldots, i_k) \\
+             \text{assuming } & 2 \leq i_1 < i_2 < \ldots < i_k \leq n -1
+    \end{split}
+\end{equation*}
+
+that defines a bijection from $2^{\{2,\ldots,n - 1\}}$ to $B_n$. It means that $|B_n| = 2^{n - 2}$ for $n \geq 2$.
+
+So the probability that the last ($n$th) person to board the plane will sit in their proper seat is $\frac{|B_n|}{|A_n|} = 0.5$ for $n \geq 2$.

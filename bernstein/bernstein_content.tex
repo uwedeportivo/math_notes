@@ -1,0 +1,141 @@
+\newthought{Bijections} from one-to-one functions are the topic\footnote{Exercise 1.5.11 on page 32 from \bibentry{abbott15}.} in this note. The problem statement is known as the Schr\"oder-Bernstein Theorem. \index{Bernstein}\index{Schr\"oder}
+
+\vspace{10 mm}
+\begin{problem}
+Let $f:X \to Y$ and $g:Y \to X$ be one-to-one functions. Then there exists a bijection $h:X \to Y$.	     
+\end{problem}
+
+\begin{marginfigure}[1.0in]
+\begin{tikzpicture}
+
+\node[] (lX) at (0, 4) {X};
+\node[] (lY) at (4, 4) {Y};
+\node[] (lA) at (-0.4, 1.5) {A};
+\node[] (lfA) at (4.6, 1.5) {f(A)};
+
+\foreach \x in {1,2,3}{
+\node[fill,circle,inner sep=2pt] (d\x) at (0,\x) {};
+}
+\node[fit=(d1) (d2) (d3),ellipse,draw,minimum width=1.5cm] {};
+\node[fit=(d2) (d3),ellipse,draw,minimum width=1cm] {};
+
+\foreach \x in {1,2,3}{
+\node[fill,circle,inner sep=2pt] (c\x) at (4,\x) {};
+}
+\node[fit=(c1) (c2) (c3),ellipse,draw,minimum width=2cm] {};
+\node[fit=(c2) (c3),ellipse,draw,minimum width=1cm] {};
+
+\draw[-latex] (d3) -- node[above] {f} (c3);
+\draw[-latex] (d2) -- node[above] {f} (c2);
+\draw[-latex] (c1) -- node[below] {g} (d2);
+\end{tikzpicture}
+\caption{$A$ violates $P(A)$}
+\label{fig:intersectNotEmpty}
+\end{marginfigure}
+
+The given functions are one-to-one, so for subsets $f(X)$ and $g(Y)$ they are already bijections. This leads to the idea of partitioning $X$ and $Y$ such that we can compose a bijection $h$ piece-wise from $f$ and $g^{-1}$ using the partitions. In particular given a subset $A \subseteq X$, we consider the sets $A$, $X \setminus A$, $f(A)$, $Y \setminus f(A)$ and $g(Y \setminus f(A))$. We want subsets $A \subseteq X$, such that $A \cap g(Y \setminus f(A)) = \emptyset$, as shown in figure \ref{fig:intersectEmpty}. Let's define this as property $P$:
+$$
+\forall A \subseteq X: P(A) \Leftrightarrow A \cap g(Y \setminus f(A)) = \emptyset
+$$
+
+\begin{marginfigure}[1.0in]
+\begin{tikzpicture}
+
+\node[] (lX) at (0, 4) {X};
+\node[] (lY) at (4, 4) {Y};
+\node[] (lA) at (-0.4, 1.5) {A};
+\node[] (lfA) at (4.6, 1.5) {f(A)};
+
+\foreach \x in {1,2,3}{
+\node[fill,circle,inner sep=2pt] (d\x) at (0,\x) {};
+}
+\node[fit=(d1) (d2) (d3),ellipse,draw,minimum width=1.5cm] {};
+\node[fit=(d2) (d3),ellipse,draw,minimum width=1cm] {};
+
+\foreach \x in {1,2,3}{
+\node[fill,circle,inner sep=2pt] (c\x) at (4,\x) {};
+}
+\node[fit=(c1) (c2) (c3),ellipse,draw,minimum width=2cm] {};
+\node[fit=(c2) (c3),ellipse,draw,minimum width=1cm] {};
+
+\draw[-latex] (d3) -- node[above] {f} (c3);
+\draw[-latex] (d2) -- node[above] {f} (c2);
+\draw[-latex] (c1) -- node[below] {g} (d1);
+\end{tikzpicture}
+\caption{$A$ satisfies $P(A)$}
+\label{fig:intersectEmpty}
+\end{marginfigure}
+
+If we have a subset $A \subseteq X$ that satisfies $P(A)$, then we can define the bijection $h$:
+$$
+h(x) = \begin{cases}
+         f(x) & : x \in A\\
+         g^{-1}(x) & : x \in g(Y \setminus f(A))
+      \end{cases} 
+$$
+
+The domain of $h$ is $A \cup g(Y \setminus f(A))$, which is not necessarily equal to $X$, so we are not done yet. Our goal therefore is to find a subset $A \subseteq X$ that satisfies $P(A)$ and for which $A \cup g(Y \setminus f(A)) = X$.
+
+Let 
+$$
+\varLambda = \{A \subseteq X: P(A)\}	
+$$	
+be the set of all subsets of $X$ that satisfy property $P$ and let $\bar{A}$ be the union of all such subsets
+$$
+\bar{A} = \bigcup_{A \in \varLambda} A
+$$
+
+\begin{lem}\label{biggestSubset}
+$\bar{A}$ is the biggest subset of $X$ that satisfies $P$.
+\end{lem}
+
+\begin{proof}
+First we show that $\bar{A}$ satisfies $P$. Assume
+$$
+\exists y \in Y \setminus f(\bar{A}) \text{ with } g(y) \in \bar{A}
+$$
+Then there exists a set $A \in \varLambda$ with $g(y) \in A$ \sidenote{Because $\bar{A} = \bigcup_{A \in \varLambda}$.}.
+$A \subseteq \bar{A}$, so $f(A) \subseteq f(\bar{A})$. Therefore $Y \setminus f(\bar{A}) \subseteq Y \setminus f(A)$, so $y \in Y \setminus f(A)$. But this contradicts $A$ satisfying property $P$, so no such $y$ exists. It follows that $\bar{A}$ satisfies $P$ too.
+
+Assume there is a set $A'$ that satisfies $P$ and that is bigger than $\bar{A}$, so $\bar{A} \subseteq A'$. But $A' \in \varLambda$ and $\bar{A} = \bigcup_{A \in \varLambda}$, so $A' \subseteq \bar{A}$. That means $A'=\bar{A}$.
+\end{proof}
+
+With $\bar{A}$ we can define the partitions $X=\bar{A} \oplus (X \setminus \bar{A})$ and $Y=f(\bar{A}) \oplus (Y \setminus f(\bar{A}))$.
+
+\begin{lem}
+$$
+g(Y \setminus f(\bar{A})) = X \setminus \bar{A}
+$$
+\end{lem}
+
+\begin{proof}
+Because $\bar{A}$ satisfies $P$, we already know that 
+$$
+g(Y \setminus f(\bar{A})) \subseteq X \setminus \bar{A}
+$$
+Now assume
+$$
+\exists x \in X \setminus \bar{A} \text{ such that } \forall y \in Y \setminus f(\bar{A}): g(y) \neq x
+$$
+But then $\bar{A} \cup \{x\}$ satisfies $P$ 
+\sidenote{
+We have
+$$
+Y \setminus f(\bar{A} \cup \{x\}) \subseteq Y \setminus f(\bar{A})
+$$
+so 
+$$
+\forall y \in Y \setminus f(\bar{A} \cup \{x\}): g(y) \not\in \bar{A} \cup \{x\}
+$$
+} and is bigger than $\bar{A}$. This contradicts lemma \ref{biggestSubset}. So no such $x$ exists and the lemma is proven.
+\end{proof}
+
+
+We can now define the bjection $h: X \to Y$ with
+$$
+h(x) = \begin{cases}
+         f(x) & : x \in \bar{A}\\
+         g^{-1}(x) & : x \in X \setminus \bar{A}
+      \end{cases} 
+$$
+which solves the problem in this section. \sidenote{The solution uses a nifty proof strategy: maximize a mathematical structure so that its ``complement'' has no choice but to satisfy a certain property, ie not satisfying the property would contradict the maximality.}

@@ -1,0 +1,264 @@
+\vspace{10 mm}
+\begin{problem}
+$N$ distinct points, numbered from $0$ onwards, are located on a circle (in the rest of this problem all point numbers are taken $\mathbf{mod} N$). Point $i + 1$ is the clockwise neighbor of point $i$. An integer array, $dist[0 \ldots N)$, is given such that $dist.i$ is the distance (along the circle) between points $i$ and  $i + 1$. Derive a program to determine whether four of these points form a rectangle.
+\end{problem}
+
+We adopt the same notation used in \textit{Programming in the 1990s} \cite{Cohen90} and \textit{Programming, The Derivation of Algorithms}\cite{Kaldewaij90}: The notation of function application is the "dot" notation with name of function, followed by arguments, each separated by a dot. The notation of quantified expressions has the operator followed by the bounded variables, then a colon followed by the range for the bounded variables and ended with a colon and the actual expression. So
+
+\begin{equation*}	 
+	(\sum k : i \leq k < j : x_k)
+\end{equation*}
+
+\noindent corresponds to the more classical mathematical notation $\sum_{k = i}^{ j - 1}x_k$. 
+
+\noindent For our derivation steps in predicate calculus we will use the following notation:
+
+\begin{equation*}
+\begin{array}{lcl}
+		&&A \\
+	      &=& \{  \mbox{reason why A equals B} \} \\      
+                  &&B \\
+                &\leq& \{ \mbox{reason why B is less than C} \} \\
+                  && C  
+   \end{array}
+\end{equation*}
+
+\noindent We are asked to solve $S$ in \medskip
+
+$\|[$
+
+\verb|    | \textbf{con} $N:\ int;\ \{N \geq 4\}$
+
+\verb|        | $dist(i: 0 \leq i < N):\ int;\ \{\forall i: 0 \leq i < N: dist.i > 0\}$
+
+\verb|    | \textbf{var} $r: bool$;
+
+\verb|        | S
+
+\verb|    | $\{r: r \equiv (\exists\ 4\  \text{points that form a rectangle}) \}$
+
+$]\|$
+
+\medskip
+
+\noindent Let's first develop a more manageable postcondition. Evidently four points that form a rectangle is equivalent to two pairs of diametral opposing points. We introduce a function for the set of all indices from point $x$ to point $y$ in clockwise direction along the circle:
+
+\begin{equation*}
+\begin{array}{ll}
+& I: [0, \ldots, N) \rightarrow [0, \ldots, N) \rightarrow 2^{[0, \ldots, N)} \\
+& I.x.y :=
+\begin{cases}
+[x, \ldots, y)\qquad,\  x \leq y \\
+[x, \ldots, N) \bigcup\  [0, \ldots, y) \quad,\ x > y
+ \end{cases}
+ \end{array}
+\end{equation*}
+
+\noindent Let $C$ be the circumference of the circle.
+\noindent We define function
+\begin{equation*}
+\begin{array}{ll}
+   & f : [0, \ldots, N) \rightarrow [0, \ldots, N) \rightarrow int \\
+   & f.x.y := C - 2 (\sum i: i \in I.x.y : dist.i)
+\end{array}
+\end{equation*}
+
+\noindent We want to find the number of diametral opposing pairs of points:\medskip
+
+$\|[$
+
+\verb|    | \textbf{con} $N:\ int;\ \{N \geq 2\}$
+
+\verb|        | $dist(i: 0 \leq i < N):\ int;\ \{\forall i: 0 \leq i < N: dist.i > 0\}$
+
+\verb|    | \textbf{var} $r: int$;
+
+\verb|        | S
+
+\verb|    | $\{r: r = (\#\ x, y: 0 \leq x < N,\  0 \leq y < N: f.x.y = 0) \}$
+
+$]\|$
+
+\medskip
+
+\begin{lem}\label{slope}
+The function $f$ is increasing in its first argument and decreasing in its second argument.
+\end{lem}
+
+\begin{proof}
+$f$ is increasing in its first argument:
+\begin{equation*}
+\begin{array}{lcl}
+		&& f.(x + 1).y \\
+	      &=& \{ \mbox{definition of $f$} \} \\      
+                  && C - 2 (\sum i: i \in I.(x + 1).y : dist.i) \\
+                &=& \{  I.(x + 1).y = I.x.y \setminus \{x\} \} \\
+                  &&  C - 2((\sum i: i \in I.x.y : dist.i) - dist.x)  \\
+                 &=& \{ \mbox{definition of $f$} \} \\
+                 && f.x.y + 2 dist.x \\
+                 &>& \{ dist.x > 0 \} \\
+                && f.x.y
+   \end{array}
+\end{equation*}
+
+$f$ is decreasing in its second argument:
+\begin{equation*}
+\begin{array}{lcl}
+		&& f.x.(y + 1) \\
+	      &=& \{ \mbox{definition of $f$} \} \\      
+                  && C - 2 (\sum i: i \in I.x .(y + 1) : dist.i) \\
+                &=& \{  I.x.(y + 1) = I.x.y\ \bigcup\  \{y\} \} \\
+                  &&  C - 2((\sum i: i \in I.x.y : dist.i) + dist.y)  \\
+                 &=& \{ \mbox{definition of $f$} \} \\
+                 && f.x.y - 2 dist.y \\
+                 &<& \{ dist.y > 0 \} \\
+                && f.x.y
+   \end{array}
+\end{equation*}
+\end{proof}
+
+\noindent Looking at the postcondition 
+\begin{equation*}
+\{r: r = (\#\ x, y: 0 \leq x < N,\  0 \leq y < N: f.x.y = 0) \}
+\end{equation*}
+ we define the function
+ \begin{equation*}
+ G.a.b = (\#\ x, y: a \leq x < N,\  b \leq y < N: f.x.y = 0)
+\end{equation*}
+and we will maintain the invariants:
+\begin{equation*}
+\begin{array}{lcl}
+     P_0 &:& G.0.0 = r + G.a.b \\      
+     P_1 &:& 0 \leq a \leq N\\
+     P_2 &:& 0 \leq b \leq N
+   \end{array}
+\end{equation*}
+
+\noindent The initial values $r, a, b := 0, 0, 0$ satisfy  the invariants and
+\begin{equation*}
+a = N \vee b = N \Rightarrow G.a.b = 0 \Rightarrow r = G.0.0
+\end{equation*}
+establishes the postcondition, so we can stop when $a = N \vee b = N$.
+
+\noindent So far we have\medskip
+
+$\|[$
+
+\verb|    | \textbf{con} $N:\ int;\ \{N \geq 4\}$
+
+\verb|        | $dist(i: 0 \leq i < N):\ int;\ \{\forall i: 0 \leq i < N: dist.i > 0\}$
+
+\verb|    | \textbf{var} $a, b, r: int$;
+
+\verb|    | $a, b, r := 0, 0, 0$;
+
+\verb|    | \textbf{do} $a \neq N \wedge b \neq N$
+
+\verb|       | S
+
+\verb|    | \textbf{od}
+
+\verb|    | $\{r: r = G.0.0 \}$
+
+$]\|$
+
+\medskip
+
+\noindent We need to increment $a, b$ and maintain the invariants:
+\begin{equation*}
+\begin{array}{lcl}
+		&& G.a.b \\
+	      &=& \{ \mbox{definition of $G$} \} \\      
+                  && (\#\ x, y: a \leq x < N,\  b \leq y < N: f.x.y = 0) \\
+                &=& \{  \text{range split } x = a \} \\
+                  &&  G.(a + 1).b + (\# y: b \leq y < N:f.a.y = 0)  \\
+                 &=& \{ \mbox{$f$ is decreasing in second argument (\ref{slope}), and assume } f.a.b < 0 \} \\
+                 && G.(a + 1).b 
+   \end{array}
+\end{equation*}
+so $f.a.b < 0 \Rightarrow G.a.b = G.(a + 1).b$. Similarly
+\begin{equation*}
+\begin{array}{lcl}
+		&& G.a.b \\
+	      &=& \{ \mbox{definition of $G$} \} \\      
+                  && (\#\ x, y: a \leq x < N,\  b \leq y < N: f.x.y = 0) \\
+                &=& \{  \text{range split } y = b \} \\
+                  &&  G.a.(b + 1) + (\# x: a \leq y < N:f.x.b = 0)  \\
+                 &=& \{ \mbox{$f$ is increasing in second argument (\ref{slope}), and assume } f.a.b > 0 \} \\
+                 && G.a.(b + 1) 
+   \end{array}
+\end{equation*}
+so $f.a.b > 0 \Rightarrow G.a.b = G.a.(b + 1)$. Also for the case $f.a.b = 0$ we have
+\begin{equation*}
+\begin{array}{lcl}
+		&& r + G.a.b \\
+	      &=& \{ \mbox{definition of $G$} \} \\      
+                  && r + (\#\ x, y: a \leq x < N,\  b \leq y < N: f.x.y = 0) \\
+                &=& \{  \text{range split } x = a \} \\
+                  &&  r + G.(a + 1).b + (\# y: b \leq y < N:f.a.y = 0)  \\
+                 &=& \{ \mbox{$f$ is decreasing in second argument (\ref{slope}), and assume } f.a.b = 0 \} \\
+                 && (r + 1) +  G.(a + 1).b 
+ \end{array}
+\end{equation*} 
+
+Our program becomes\medskip
+
+$\|[$
+
+\verb|    | \textbf{con} $N:\ int;\ \{N \geq 4\}$
+
+\verb|        | $dist(i: 0 \leq i < N):\ int;\ \{\forall i: 0 \leq i < N: dist.i > 0\}$
+
+\verb|    | \textbf{var} $a, b, r: int$;
+
+\verb|    | $a, b, r := 0, 0, 0$;
+
+\verb|    | \textbf{do} $a \neq N \wedge b \neq N$
+
+\verb|       | \textbf{if}
+
+\verb|       | $\square\  f.a.b > 0 \rightarrow b := b + 1$
+
+\verb|       |  $\square\  f.a.b < 0 \rightarrow a := a + 1$ 
+
+\verb|       |  $\square\  f.a.b = 0 \rightarrow a, r := a + 1, r + 1$ 
+
+\verb|       | \textbf{fi}
+
+\verb|    | \textbf{od}
+
+\verb|    | $\{r: r = G.0.0 \}$
+
+$]\|$
+
+\medskip
+
+\noindent We cannot have $f$ in the program text so the last thing we have to do is eliminate $f$. We do this by introducing a new variable $c: int$ and maintaining the additional invariant $P_3: c = f.a.b$. Lemma \ref{slope} already showed us the expressions for $f$ when the first or the second argument increase, so our final program looks like this\footnote{The program is bound by the function $2 N - a - b$ so it is $O(N)$. The solution is an example of the slope search technique.}\medskip
+
+$\|[$
+
+\verb|    | \textbf{con} $N:\ int;\ \{N \geq 4\}$
+
+\verb|        | $dist(i: 0 \leq i < N):\ int;\ \{\forall i: 0 \leq i < N: dist.i > 0\}$
+
+\verb|    | \textbf{var} $a, b, c, r: int$;
+
+\verb|    | $a, b, c, r := 0, 0, C, 0$;
+
+\verb|    | \textbf{do} $a \neq N \wedge b \neq N$
+
+\verb|       | \textbf{if}
+
+\verb|       | $\square\  c > 0 \rightarrow b, c := b + 1, c - 2 dist.b$
+
+\verb|       |  $\square\  c < 0 \rightarrow a, c := a + 1, c + 2 dist.a$ 
+
+\verb|       |  $\square\  c = 0 \rightarrow a, c, r := a + 1, 2 dist.a, r + 1$ 
+
+\verb|       | \textbf{fi}
+
+\verb|    | \textbf{od}
+
+\verb|    | $\{r: r = G.0.0 \}$
+
+$]\|$

@@ -1,0 +1,105 @@
+\vspace{10 mm}
+\begin{problem}
+A prison has $n$ cells with all cell doors shut initially. The warden is a little weird so he walks the whole row of cells and opens every cell door. Then he walks the whole row again and shuts every other cell door. Then he walks the whole row again and opens every third door then walks the row again and shuts every 4th door etc. You can assume that the doors are numbered $0$ to $(n - 1)$ and the warden always starts at zero and walks them in order. Which doors will stay open when the warden is done ? 
+\end{problem}
+
+Each time the warden walks the row of cells he toggles the state (open or close) of some of the cells. It is clear then that the number of toggles to one cell determines if it is open or closed in the end. In the beginning each cell door is closed so if the number of toggles is even then it stays closed, if it is odd then it is open at the end.
+
+The goal then is to calculate the number of toggles for a cell. The cells are numbered $0$ to $(n - 1)$ so lets try to calculate the number of toggles for cell $k$. The first time the warden walks the row of cells he toggles each cell including our cell $k$. The second time he toggles cells $0, 2, 4, \dots$. That means he toggles cell $k$ if k is even. The third time around he toggles cells $0, 3, 6, \dots$ so he toggles cell $k$ if k is a multiple of 3. If we continue we see that the cell $k$ gets toggled on the warden's $d$ walk if $k$ is a multiple of $d$ or said differently if $d$ divides $k$.
+
+It follows that the number of toggles $T(k)$ for cell $k$ is
+
+\[	 
+	T(k) = \sum_{d \mid k} 1.
+\]
+
+This is already pretty good but for the expression above it's not so obvious for which $k$ $T(k)$ will be even and for which it will be odd. So we will make a short excursion into basic number theory in the hopes that we can transform the expression into something more revealing.
+
+ \subsection{A little number theory}
+
+We say that two integers $m$ and $n$ are \textit{relatively prime} if the only common divisors are $\pm 1$ and we write $(m, n) = 1$ in that case.
+
+\begin{defn}
+A function $f:\mathbb{N} \rightarrow \Omega$ with $\Omega$ a field is said to be \textbf{weakly multiplicative} if
+
+\[
+	\forall \ m, n \in \mathbb{N}: (m, n) = 1 \ \Rightarrow \ f(mn) = f(m) f(n).
+\]
+\end{defn}
+
+\begin{thm}
+If $f$ is a weakly multiplicative function then so is the function
+
+\[
+	g(n) = \sum_{d \mid n} f(d).
+\]
+\end{thm}
+
+\begin{proof}
+	
+Let $m_1,m_2 \in \mathbb{N}$ with $(m_1, m_2) = 1$. Let's define two sets
+
+\[
+	S_1 = \{ d\ :\ d \mid m_1 m_2 \}, \ S_2 = \{ d_1 d_2\ :\ d_1 \mid m_1 \wedge d_2 \mid m_2 \}.
+\]		
+
+\noindent It is obvious that $S_2 \subseteq S_1$. On the other hand
+
+\[
+	\begin{array}{l}
+	              \forall x \in S_1 \leadsto x \mid m_1 m_2 \ \mbox{(by definition)} \\
+	              \mbox{Let } \ k = (x, m_1), \mbox{ so } x = y k, m_1 = z k,  \mbox{ for some } y, z \in \mathbb{N} \mbox{ and } (y, z) = 1 \\
+	              x \mid m_1 m_2 \leadsto y k \mid z k m_2 \leadsto y \mid m_2 \mbox{ because } (y, z) = 1\\
+	              \mbox{This means } x = y k \in S_2 \mbox{ because } y \mid m_2 \wedge k \mid m_1.
+	 \end{array}       
+\]
+
+\noindent So we have $S_1 = S_2$. We can now write
+
+\[
+   \begin{array}{lcl}
+		&&g(m_1 m_2) \\
+	      &=& { < \mbox{definition of g} >} \\      
+                  &&(\sum d: d \mid m_1 m_2 : f(d)) \\
+       	      &=& { < \mbox{index sets }S_1 = S_2\mbox{ so we change bounded variables}  >} \\
+                  && (\sum d_1, d_2: d_1 \mid m_1 \wedge d_2 \mid m_2 : f(d_1 d_2)) \\
+ 	       &=& { < \mbox{f is weakly multiplicative and } (d_1, d_2) = 1 > }  \\
+	         && (\sum d_1, d_2: d_1 \mid m_1 \wedge d_2 \mid m_2 : f(d_1) f(d_2))\\
+	        &=& { < \mbox{nesting}  > }  \\ 
+	        && (\sum d_1: d_1 \mid m_1 : (\sum d_2: d_2 \mid m_2: f(d_1) f(d_2))) \\
+	        &=& { < \mbox{multiplication distributes over addition}  > }  \\
+	         && (\sum d_1: d_1 \mid m_1 : f(d_1) (\sum d_2: d_2 \mid m_2: f(d_2))) \\
+	        &=& { < \mbox{definition of g}  > }  \\ 
+	        && (\sum d_1: d_1 \mid m_1 : f(d_1) g(m_2)) \\
+	        &=& { < \mbox{multiplication distributes over addition}  > }  \\
+	        	&& (\sum d_1: d_1 \mid m_1 : f(d_1)) g(m_2) \\
+		&=& { < \mbox{definition of g}  > }  \\ 
+		&& g(m_1) g(m_2).
+   \end{array}
+\]
+which proves the theorem.
+\end{proof}
+
+The theorem tells us that the function $T(k)$ which is the number of toggles for cell $k$
+\[	 
+	T(k) = \sum_{d \mid k} 1.
+\]
+is in fact a weakly multiplicative function because the function inside the sum (the constant function 1) is trivially a weakly multiplicative function.
+
+\subsection{A more detailed solution}
+
+If we use the unique prime factorization of $k$
+\[
+	k = p_1^{a_1} p_1^{a_1} \dots p_h^{a_h}
+\]
+and use the fact that $(p_i^{a_i}, p_j^{a_j}) = 1$ we get
+\[
+	T(k) = \prod_{i  = 1}^h T(p_i^{a_i}).
+\]		 
+
+But it's easy to see that $T(p_i^{a_i}) = a_i + 1$ so we have
+\[
+	T(k) = \prod_{i  = 1}^h (a_i + 1).
+\]
+
+When is $T(k)$ even ? When any of the $a_i$ are odd. To find out if a cell is open or closed do the prime factorization and look at the exponents of the primes. If any of them is odd then the cell stays closed.	

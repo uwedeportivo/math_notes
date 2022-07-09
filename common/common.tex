@@ -72,10 +72,28 @@
 \newtheorem*{rem}{Remark} 
 \newtheorem*{note}{Note} 
 \newtheorem{case}{Case}
+\newtheorem{thminv}{Invariant}[chapter] 
+
 
 \newtcolorbox{problem}{title={Problem}}
 
 \newenvironment{dedication}
     {\vspace{6ex}\begin{quotation}\begin{center}\begin{em}\begin{large}}
     {\par\end{large}\end{em}\end{center}\end{quotation}}
+
+\mmaDefineMathReplacement[≤]{<=}{\leq}
+\mmaDefineMathReplacement[≥]{>=}{\geq}
+\mmaDefineMathReplacement[≠]{!=}{\neq}
+\mmaDefineMathReplacement[→]{->}{\to}[2]
+\mmaDefineMathReplacement[⧴]{:>}{:\hspace{-.2em}\to}[2]
+\mmaDefineMathReplacement{∉}{\notin}
+\mmaDefineMathReplacement{∞}{\infty}
+\mmaDefineMathReplacement{𝕕}{\mathbbm{d}}
+
+
+\mmaSet{
+  morefv={gobble=2},
+  linklocaluri=mma/symbol/definition:#1,
+  morecellgraphics={yoffset=1.9ex}
+}
 
