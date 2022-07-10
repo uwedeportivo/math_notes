@@ -19,7 +19,7 @@ At first glance this looks similar to a SAT problem \footnote{Boolean satisfiabi
 
 But SAT is about one boolean expression and about assigning values to boolean variables to satisfy it. Seems like SAT is fundamentally different and not a good approach in solving this problem. What if we want to visualize the boolean expressions and see the relationships between them, i.e. which ones are in conflict. Conflict between two boolean expressions means one expression has $c_i$ and the other expression has $\lnot c_i$ or one has $d_j$ and the other $\lnot d_j$. A good way to do that is with a graph as in Figure \ref{votes_conflict}. The nodes in the graph are the boolean expressions and edges connect  boolean expressions that are in conflict.
 
-\begin{marginfigure}[0.01in]
+\begin{figure}[t]
 \begin{tikzpicture}[
             shorten > = 1pt, % don't touch arrow head to node
             auto,
@@ -56,7 +56,7 @@ But SAT is about one boolean expression and about assigning values to boolean va
     \end{tikzpicture}
     \caption{Votes form a bipartite graph. A graph is \textbf{bipartite} if the vertex set is partitioned into two subsets (blue and green in this case) such that no vertices in a subset are adjacent.}
 	\label{votes_conflict}
-\end{marginfigure}
+\end{figure}
 
 It becomes apparent that the graph is bipartite with cat lovers on one side and dog lovers on the other. That is good because a lot of graph algorithms are much simpler and work faster if the graphs are bipartite. But what algorithm should we use? We need to find the biggest subset of nodes in the graph that are not in conflict. 
 
@@ -148,7 +148,9 @@ $$
 |f| = \sum_w f(s \rightarrow w) = \sum_v f(v \rightarrow t)
 $$
 
-\begin{marginfigure}[0.1in]
+Given a network $(G, s, t, c)$ what is the maximum flow value that can be pumped through it? Figure \ref{ex_flow} shows a flow of value $20$ through an example network. It saturates the flow along one particular path and avoids the other edges. Is $20$ the maximum flow value that can be achieved for this example network? Figure \ref{ex_flow_max} shows the same network but now with a flow of value $30$. Can we do better than $30$? The answer is no, because that would exceed the outgoing capacity of source $s$ or the incoming capacity of $t$. 
+
+\begin{marginfigure}
 \begin{tikzpicture}[
             shorten > = 1pt, % don't touch arrow head to node
             auto,
@@ -179,15 +181,13 @@ $$
 	\label{ex_flow_max}
 \end{marginfigure}
 
-Given a network $(G, s, t, c)$ what is the maximum flow value that can be pumped through it? Figure \ref{ex_flow} shows a flow of value $20$ through an example network. It saturates the flow along one particular path and avoids the other edges. Is $20$ the maximum flow value that can be achieved for this example network? Figure \ref{ex_flow_max} shows the same network but now with a flow of value $30$. Can we do better than $30$? The answer is no, because that would exceed the outgoing capacity of source $s$ or the incoming capacity of $t$. 
-
 Our goal is to device an algorithm that constructs a flow with maximum value through a given network. To gauge the progress of our algorithm we need an upper bound for the maximum flow value. As said before the maximum value clearly cannot exceed the outgoing capacity of source $s$ or the incoming capacity of $t$. But more generally if we sever the ties between source and target along some subset of edges such that there are no more paths from source to target then the maximum flow value cannot exceed the capacity of the cut. This seems like a useful concept to formalize.
 
-\begin{marginfigure}[1in]
+\begin{figure}[t]
 \includegraphics[scale=0.15]{soviettrainnetwork.jpeg}
-\end{marginfigure}
-\marginnote{\bibentry{Schrijver02onthe}:\\
+\caption{\protect\bibentry{Schrijver02onthe}:\\
  Network flows and minimum cuts played a role in the Cold War. The figure is a schematic diagram of the railway network of the Western Soviet Union and Eastern European countries, with a maximum flow of value 163,000 tons from Russia to Eastern Europe, and a cut of capacity 163,000 tons indicated as “The bottleneck”.}
+\end{figure}
 
 \begin{defn}\label{networkcut}
 In a network $(G, s, t, c)$ a \textbf{cut} is a partition of the vertex set $V$ into two subsets $S$ and $T$, such that $V = S \cup T$, $S \cap T = \emptyset$ and $s \in S, t \in T$. The \textbf{capacity} of the cut $(S, T)$, denoted $\|S,T\|$, is defined as
@@ -205,7 +205,21 @@ $$
 Furthermore equality holds if and only if $f$ saturates every edge from $S$ to $T$ and avoids every edge from $T$ to $S$.
 \end{thm}
 
-\begin{marginfigure}[1in]
+\begin{proof}
+
+\begin{align*}
+|f| &= \sum_w f(s \rightarrow w) \tag*{\tiny{(by definition)}}\\
+    &= \sum_w f(s \rightarrow w) - \sum_v f(v \rightarrow s) \tag*{\tiny{(second sum terms are all zero)}}\\
+    &= \sum_{u \in S} (\sum_w f(u \rightarrow w) - \sum_v f(v \rightarrow u)) \tag*{\tiny{(flow conservation constraint)}}\\
+    &= \sum_{u \in S} (\sum_{w \in T} f(u \rightarrow w) - \sum_{v \in T} f(v \rightarrow u)) \tag*{\tiny{(edges in $S$ cancel each other out)}}\\
+    &\leq \sum_{u \in S} \sum_{w \in T} f(u \rightarrow w) \tag*{\tiny{(because $f(v \rightarrow u) \geq 0$)}}\\
+    &\leq \sum_{u \in S} \sum_{w \in T} c(u \rightarrow w) \tag*{\tiny{(flow capacity constraint)}}\\
+    &= \|S, T\| \tag*{\tiny{(by definition)}}
+\end{align*}
+
+\end{proof}
+
+\begin{marginfigure}
 \begin{tikzpicture}[
             shorten > = 1pt, % don't touch arrow head to node
             auto,
@@ -239,21 +253,26 @@ Furthermore equality holds if and only if $f$ saturates every edge from $S$ to $
 	\label{ex_flow_dashed}
 \end{marginfigure}
 
-\begin{proof}
-
-\begin{align*}
-|f| &= \sum_w f(s \rightarrow w) \tag*{\tiny{(by definition)}}\\
-    &= \sum_w f(s \rightarrow w) - \sum_v f(v \rightarrow s) \tag*{\tiny{(second sum terms are all zero)}}\\
-    &= \sum_{u \in S} (\sum_w f(u \rightarrow w) - \sum_v f(v \rightarrow u)) \tag*{\tiny{(flow conservation constraint)}}\\
-    &= \sum_{u \in S} (\sum_{w \in T} f(u \rightarrow w) - \sum_{v \in T} f(v \rightarrow u)) \tag*{\tiny{(edges in $S$ cancel each other out)}}\\
-    &\leq \sum_{u \in S} \sum_{w \in T} f(u \rightarrow w) \tag*{\tiny{(because $f(v \rightarrow u) \geq 0$)}}\\
-    &\leq \sum_{u \in S} \sum_{w \in T} c(u \rightarrow w) \tag*{\tiny{(flow capacity constraint)}}\\
-    &= \|S, T\| \tag*{\tiny{(by definition)}}
-\end{align*}
-
-\end{proof}
-
 Theorem \ref{flowcut} tells us that if we keep increasing a flow and/or decreasing a cut we should eventually meet at a maximum flow that equals a minimum cut. But given a network how do we start? A first valid flow is $\forall e \in E: f(e) = 0$. We could then try a greedy strategy. Starting with source $s$ find the path to $t$ with the biggest capacity\footnote{The capacity of a path is the minimum over the capacities of the edges forming the path.} and pump as much flow as we can through it as illustrated in Figure \ref{ex_flow}. Unfortunately we are stuck at that point. We cannot pump more flow out of $s$ on $s \rightarrow v$ because that would violate flow conservation at $v$ (we are at the maximum outgoing flow at $v$). The dashed edges in Figure \ref{ex_flow_dashed} show some of our options. On edges where the current flow leaves residual capacity we can pump more and on edges where there is existing flow we can reverse it. Again, this concept seems worth formalizing.
+
+\begin{defn}\label{residualgraph}
+A flow $f$ in a network $(G, s, t, c)$ induces a \textbf{residual network} $(G_f, s, t, c_f)$ with \textbf{residual graph} $G_f$ and \textbf{residual capacity} $c_f$ in the following way:
+
+\begin{itemize}
+	\item all vertices from $G$ are vertices in $G_f$, also source $s$ and target $t$ are the same in $G$ and $G_f$
+	\item if $f(u \rightarrow v) > 0$ then $G_f$ has an edge $(v \rightarrow u)$ with capacity 
+$$
+c_f(v \rightarrow u) = f(u \rightarrow v)
+$$
+    \item if $f(u \rightarrow v) < c(u \rightarrow v)$ then $G_f$ has an edge $(u \rightarrow v)$ with capacity
+$$
+c_f(u \rightarrow v) = c(u \rightarrow v) - f(u \rightarrow v)
+$$
+\end{itemize}
+
+\end{defn}
+
+Figure \ref{ex_residual} shows the residual network of our example network and flow. We observe that there is a simple path\footnote{A simple path is a path where every vertex on the path is visited only once.} $s \rightarrow v \rightarrow u \rightarrow t$ with capacity $10$ from source $s$ to target $t$ in the residual graph. This path shows that there still is unused capacity for flow to be pushed from $s$ to $t$. A simple path from $s$ to $t$ in $G_f$ is called an \textbf{augmenting path}.
 
 \begin{marginfigure}
 \begin{tikzpicture}[
@@ -302,26 +321,8 @@ Theorem \ref{flowcut} tells us that if we keep increasing a flow and/or decreasi
 	\label{ex_residual}
 \end{marginfigure}
 
-\begin{defn}\label{residualgraph}
-A flow $f$ in a network $(G, s, t, c)$ induces a \textbf{residual network} $(G_f, s, t, c_f)$ with \textbf{residual graph} $G_f$ and \textbf{residual capacity} $c_f$ in the following way:
 
-\begin{itemize}
-	\item all vertices from $G$ are vertices in $G_f$, also source $s$ and target $t$ are the same in $G$ and $G_f$
-	\item if $f(u \rightarrow v) > 0$ then $G_f$ has an edge $(v \rightarrow u)$ with capacity 
-$$
-c_f(v \rightarrow u) = f(u \rightarrow v)
-$$
-    \item if $f(u \rightarrow v) < c(u \rightarrow v)$ then $G_f$ has an edge $(u \rightarrow v)$ with capacity
-$$
-c_f(u \rightarrow v) = c(u \rightarrow v) - f(u \rightarrow v)
-$$
-\end{itemize}
-
-\end{defn}
-
-Figure \ref{ex_residual} shows the residual network of our example network and flow. We observe that there is a simple path\footnote{A simple path is a path where every vertex on the path is visited only once.} $s \rightarrow v \rightarrow u \rightarrow t$ with capacity $10$ from source $s$ to target $t$ in the residual graph. This path shows that there still is unused capacity for flow to be pushed from $s$ to $t$. A simple path from $s$ to $t$ in $G_f$ is called an \textbf{augmenting path}.
-
-\begin{marginfigure}[0.3in]
+\begin{marginfigure}
 \begin{tikzpicture}[
             shorten > = 1pt, % don't touch arrow head to node
             auto,
@@ -427,7 +428,7 @@ Next is the conservation constraint. For vertices not on the augmenting path flo
 
 \end{proof}
 
-\begin{marginfigure}[1in]
+\begin{marginfigure}
 \begin{tikzpicture}[
             shorten > = 1pt, % don't touch arrow head to node
             auto,
@@ -485,7 +486,7 @@ We define two subsets of $V$. The set $S$ holds all the vertices of $V$ that are
 
 \end{proof}
 
-\begin{marginfigure}[0.0in]
+\begin{marginfigure}
 \includegraphics[scale=0.8]{fulkerson.png}
 \end{marginfigure}
 \marginnote{Delbert Ray Fulkerson was an American mathematician who co-developed the Ford–Fulkerson algorithm. \url{https://en.wikipedia.org/wiki/D._R._Fulkerson}}
@@ -514,6 +515,8 @@ We prove by induction that $f: V \times V \to \mathbb{N}_{\geq 0}$: The base cas
 The augmented flow $f'$ modifies one outgoing edge from $s$ by $F > 0$, so by the definition of the value of a flow we have $|f'| = |f| + F$. This means that augmenting strictly increases the value of the flow. We also know that flow values have an upper bound (by Theorem \ref{flowcut} any cut capacity is an upper bound). This means the algorithm has to eventually reach the maximum flow and terminate.
 \end{proof}
 
+\newpage
+
 This concludes our detour into network flows\footnote{We have just scratched the surface of the topic on network flows and algorithms computing maximum flows (an area of active research). For example by making smart choices when choosing the augmenting path we can improve the runtime of the algorithm (also we haven't analyzed the runtime). What happens when the capacities are not in $\mathbb{N}_{\geq 0}$. For details on all this and more see:
 \\
 \bibentry{kleinberg2005ad} 
@@ -534,7 +537,7 @@ We have an undirected bipartite graph $G(V = X \cup Y, E)$ with $X \cap Y = \emp
 
 With a network $(G', s, t, c)$ constructed from a bipartite graph $G$ as described above (an example is shown in Figure \ref{bipartite_network}) we have an equivalence between a matching in the bipartite graph and a flow in the network. The next theorem states this.
 
-\begin{marginfigure}[1.0in]
+\begin{marginfigure}
 \begin{tikzpicture}[
             shorten > = 1pt, % don't touch arrow head to node
             auto,
@@ -643,14 +646,14 @@ A vertex $v \in Y_S$ is reachable from $s$ in $G'_f$. It means that $f$ saturate
 
 $f$ is a maximum flow so any edge from $X_S$ to $Y_T$ is saturated and counts towards $\|S, T\|$.
 
-\begin{marginfigure}[0.1in]
+\begin{figure}[t]
 \includegraphics[scale=0.5]{koenig.pdf}
 \caption{\\
              (a) A bipartite graph $G(X \cup Y, E)$. $X$ are green vertices, $Y$ are red vertices.\\
              (b) Maximum flow $f$ (thicker arrows) and minimum cut $(S, T)$ in the corresponding network $G'$. Thicker arrows between green and red vertices form the maximum matching.\\
              (c) Same cut displayed with the corresponding residual graph $G'_f$.}
 	\label{koenig_example}
-\end{marginfigure}
+\end{figure}
 
 $$
 \|S, T\| = |X_T| + |Y_S| + |H|
