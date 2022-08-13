@@ -69,7 +69,7 @@ $$
 \text{if } A[w] = {\color{blue} \squadfill} \text{ then } A[w] \leftrightarrow A[b-1] \text{ ; } b \leftarrow b - 1 \text{ endif}
 $$
 
-If $A[w] = {\color{red} \squadfill}$ then we can do the following swap: we swap $A[r]$ with $A[w]$. We can then extend the red region to its right. Whatever the white region was (empty or not), it also shifts to the right by one (as a region it hasn't changed, just the first white element might have moved to the right if the white region was not empty):
+If $A[w] = {\color{red} \squadfill}$ then we can do the following swap: we swap $A[r]$ with $A[w]$. We can then extend the red region to its right. Whatever the white region was (empty or not), it also shifts to the right by one (as a region it hasn't changed, just the first white element might have moved to be the last element of the white region if the white region was not empty):
 
 $$
 \text{if } A[w] = {\color{red} \squadfill} \text{ then } A[w] \leftrightarrow A[r] \text{ ; } r \leftarrow r + 1 \text{ ; } w \leftarrow w + 1 \text{ endif}
