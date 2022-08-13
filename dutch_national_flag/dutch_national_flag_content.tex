@@ -37,7 +37,7 @@ P & \equiv (\forall i: 0 \leq i < r: A[i] = {\color{red} \squadfill}) \\
   & \wedge (\forall i: b \leq i < n: A[i] = {\color{blue} \squadfill})
 \end{align*}
 
-This allows us to assign values to our indices $r$, $w$ and $b$ that satisfy $P$ before the loop starts by extending the unprocessed region to be the whole array and making the red, white and blue regions empty\footnote{This is the key insight for solving the problem. Instead of having only three color regions to work with, we introduce a fourth region of unprocessed elements and we gradually shrink it. In the beginning this fourth region is the whole array and the color regions are all three empty. As the unprocessed region shrinks, the color regions start to grow in such a way that $P$ always stays true. In the end the unprocessed region is empty and the the three color regions are in their final desired state thanks to $P$ always holding.}:
+This allows us to assign values to our indices $r$, $w$ and $b$ that satisfy $P$ before the loop starts by extending the unprocessed region to be the whole array and making the red, white and blue regions empty\footnote{This is the key insight for solving the problem. Instead of having only three color regions to work with, we introduce a fourth region of unprocessed elements and we gradually shrink it. In the beginning this fourth region is the whole array and the color regions are all three empty. As the unprocessed region shrinks, the color regions start to grow in such a way that $P$ always stays true. In the end the unprocessed region is empty and the three color regions are in their final desired state thanks to $P$ always holding.}:
 
 \begin{align*}
 r & \leftarrow 0 \\
