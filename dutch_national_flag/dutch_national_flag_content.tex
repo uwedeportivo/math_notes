@@ -78,9 +78,9 @@ $$
 These cases\footnote{These cases are biased towards making progress from the left to the right. One can make similar choices that cover more cases on the right border of the unprocessed region.} are sufficient to allow us to make progress while maintaining $P$. Because $b-w$ is finite and we reduce it each time through the loop, the loop will terminate. Our final program (in Go syntax) is:
 
 \begin{lstlisting}[language=Go, frame=single]  
-r := 0;
-w := 0;
-b := 0;
+r := 0
+w := 0
+b := 0
 for w < b {
    switch {
    case A[w] == White: w = w + 1
