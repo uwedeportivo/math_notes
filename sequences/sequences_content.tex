@@ -66,10 +66,10 @@ num_inversions := 0
 for i:=0; i < n; i++ {
    switch {
    case b[i] == '0': 
-     num_inversions = 2^k * seen_ones + 2^(k-1) * seen_qmarks
+     num_inversions += 2^k * seen_ones + 2^(k-1) * seen_qmarks
    case b[i] == '1': seen_ones++
    case b[i] == '?': 
-     num_inversions = 2^k * seen_ones + 2^(k-2) * seen_qmarks
+     num_inversions += 2^k * seen_ones + 2^(k-2) * seen_qmarks
      seen_qmarks++
    }
 }          
