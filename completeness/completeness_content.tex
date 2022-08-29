@@ -1,0 +1,200 @@
+\newthought{Completeness} and related properties\footnote{Exercise 2.6.7 on page 71 from \bibentry{abbott15}.} are the topic in this section.
+\newline
+
+Consider the function $f: \mathbb{Q} \to \mathbb{Q}$ defined as follows:
+$$
+f(x) = \begin{cases}
+         -1 & : x^2 < 2\\
+         1 & : \text{otherwise}
+      \end{cases}
+$$
+
+Even though $\forall x \in \mathbb{Q}: f'(x) = 0$ the function $f$ is not constant. Furthermore $f$ is continuous in $\mathbb{Q}$ and $f(0) = -1 < 0$ and $f(2) = 1 > 0$ but there is no $c \in \mathbb{Q}$ for which $f(c) = 0$, so the \textit{Intermediate Value Property} doesn't hold\footnote{The Ancient Greeks already discovered that $\sqrt{2} \notin \mathbb{Q}$.}. 
+
+Clearly $\mathbb{R}$ has an additional property which distinguishes it from $\mathbb{Q}$. This property cannot be deduced from the ordered field axioms\footnote{We mean here the axioms of Addition and Multiplication (Commutativity, Associativity, etc) and Order axioms (Trichotemy, Transitivity, etc). See \url{http://homepages.math.uic.edu/~kauffman/axioms1.pdf}} because those are shared by $\mathbb{Q}$ and $\mathbb{R}$ and we would be able to deduce it for $\mathbb{Q}$ too. It needs to be an additional property. The \textbf{Dedekind Completeness Property} is most commonly used as this additional property. We want to explore in this section how Dedekind Completeness relates to other properties also tied to what makes $\mathbb{R}$ different from $\mathbb{Q}$.
+
+The properties we consider are\footnote{For a more detailed view on this topic and counterexamples of ordered fields without some of these properties see \bibentry{ProppJRealAnalysisInReverse}.}:
+
+\begin{description}
+\item[Dedekink Completeness Property] \textbf{DDC}: Every non-empty real set bounded from above has a least upper bound.
+\item[Cut Property] \textbf{CP}: Let $A$ and $B$ be two non-empty subsets of $\mathbb{R}$ with $A \cap B = \emptyset$ and $A \cup B = \mathbb{R}$ such that $\forall a \in A \text{ and } b \in B: a < b$. Then there exists a cutpoint $c \in \mathbb{R}$ such that $\forall a \in A \text{ and } b \in B: a \leq c \leq b$.
+\item[Archimedean Property] \textbf{AP}: $\forall x \in \mathbb{R}: \exists n \in \mathbb{N} \text{ with } n > x$.
+\item[Nested Interval Property] \textbf{NIP}: Given sequence of non-empty intervals $I_n, n \in \mathbb{N}$ 
+with $I_{n+1} \subseteq I_n$, then $\cap_{n \in \mathbb{N}} I_n \neq \emptyset$.
+\item[Monotone Convergence Property] \textbf{MC}: A bounded monotone sequence converges.
+\item[Bolzano-Weierstrass Property] \textbf{BW}: A bounded sequence has a convergent subsequence.
+\item[Cauchy Criterion] \textbf{CC}: A sequence converges if and only if it is a Cauchy sequence.
+\item[Ratio Test] \textbf{RT}: If $\lim_{n \to \infty}\frac{|a_{n+1}|}{|a_n|} = L < 1$ then $\sum_{n=1}^{\infty} a_n$ converges\footnote{The \textit{Ratio Test} and the \textit{Intermediate Value Property} feel like higher level properties that use infinite series and continuos functions. We will see in the following theorems how they relate to the other properties.}.
+\item[Intermediate Value Property] \textbf{IV}: Given is a continuous function $f:[a, b] \to \mathbb{R}$ with $f(a) < 0$ and $f(b) > 0$. Then there exists $c \in [a, b]$ with $f(c) = 0$.
+\end{description}
+
+\begin{thm}
+$DDC \Leftrightarrow CP$
+\end{thm}
+
+\begin{proof}
+
+\noindent$(\Rightarrow)$ We have $A$ and $B$ two non-empty subsets of $\mathbb{R}$ with $A \cap B = \emptyset$ and $A \cup B = \mathbb{R}$ such that $\forall a \in A \text{ and } b \in B: a < b$. $B$ is non-empty, so there exists $b \in B$. This $b$ is an upper bound of $A$, so $A$ is bound from above. By the Dedekind Completeness Property $DDC$ there exists a least upper bound $c$. We claim that $c$ is the desired cutpoint. Since $c$ is the least upper bound we already have $A \leq c$. Assume $\exists b' \in B$ with $b' < c$. But $b'$ is an upper bound of A (since $A < B$) which means $c \leq b'$ because $c$ is the least upper bound. This is a contradiction, so $\forall b' \in B: b' \geq c$. It follows that $A \leq c \leq B$ and $c$ is the cutpoint. 
+
+\noindent$(\Leftarrow)$ 
+We are given a non-empty set $A \subset \mathbb{R}$ bound from above, so there exists $b \in \mathbb{R}: A \leq b$.  We define $B$ be the set of upper bounds of $A$ and let $A' = \mathbb{R} \setminus B$. Both $A'$ and $B$ are non-empty, $A' < B$ and $A' \cup B = \mathbb{R}$\footnote{The set $A$ is bounded from above so $B$ is non-empty. If $A = \{a\}$ then $A'$ is non-empty (for example $(a - 1) \in A'$). If $|A| > 1$ then one of the elements in $A$ cannot be an upper bound of $A$ which also implies $A'$ is non-empty. By definition $A' \cup B = \mathbb{R}$. Assume there exists $a' \in A'$ and $b' \in B$ such that $a' \geq b'$. This would make $a'$ an upper bound of $A$, so $a' \in B$, a contradiction. It follows that $A' < B$.}. By the Cut Property $CP$ there exists a cutpoint $c$ with $A' \leq c \leq B$. We claim that $c$ is the least upper bound of $A$. Assume there exists $a \in A$ with $c < a$. Then for $c' = \frac{c + a}{2}$ we have $c < c' < a$. This implies that $c' \in B$ so $c'$ is an upper bound of $A$ which contradicts with $c' < a$. We therefore have $\forall a \in A: a \leq c$ and $c$ is an upper bound of $A$. Now assume there exists another upper bound $d$ with $d < c$. But then $d \in A'$ which contradicts the definition of $A'$ and $B$. So for all $d$ upper bound of $A$ we have $d \geq c$. This makes $c$ the least upper bound of $A$. 
+\end{proof}
+
+\begin{thm}\label{DDCeqNIP}
+$DDC \Leftrightarrow NIP + AP$\footnote{The Nested Intervals Property $NIP$ is not enough to achieve Dedekind Completeness $DDC$. For examples of fields that are not Archimedean see \bibentry{ProppJRealAnalysisInReverse}. This theorem only shows that if the Archimedean Property $AP$ also holds then we can get back from $NIP$ to $DDC$.}
+\end{thm}
+
+\begin{proof}
+\noindent$(\Rightarrow)$ We have nested intervals $I_n = [a_n, b_n]$ with $I_{n+1} \subseteq I_n$. It follows that for all $n \in \mathbb{N}$ we have $a_{n+1} \geq a_n$ and $b_{n+1} \leq b_n$. Assume there exists $i, j \in \mathbb{N}$ such that $b_i < a_j$. We have three cases: 
+\begin{itemize}
+\item $i = j$: then $a_i \leq b_i$ for interval $I_i$ contradicting $b_i < a_j$. 
+\item $i < j$: then $b_i \geq b_j$ which yields the inequality chain $b_j \leq b_i < a_j$, contradicting $a_j \leq b_j$ for interval $I_j$.
+\item $i > j$: then $a_i \geq a_j$ which yields the inequality chain $b_i < a_j \leq a_i$, contradicting $a_i \leq b_i$ for interval $I_i$.
+\end{itemize} 
+This means that for all $i, j \in \mathbb{N}$ we have $a_j \leq b_i$. In other words, the $b_n$ are upper bounds for the set $A = \{a_n: n \in \mathbb{N}\}$.
+
+The set $A$ is bound from above and non-empty, so according to $DDC$ there exists a least upper bound $c$. Since it is an upper bound we already have $\forall n \in \mathbb{N}: a_n \leq c$. Since $c$ is the least upper bound and all $b_n$ are upper bounds we also have $c \leq b_n$. It follows that $\forall n \in \mathbb{N}: c \in I_n$ or $c \in \cap_{n \in \mathbb{N}} I_n$. This proves $DDC \Rightarrow NIP$.
+
+Assume there exists $x \in \mathbb{R}$ such that $\forall n \in \mathbb{N}: n \leq x$. This means that $\mathbb{N}$ is bound from above. Let $c$ be the least upper bound for $\mathbb{N}$. We have 
+
+$$
+\forall n \in \mathbb{N}: n + 1 \in \mathbb{N} \Rightarrow n + 1 \leq c \Rightarrow n \leq c - 1
+$$
+
+$c - 1$ is an upper bound, $c$ is the least upper bound so $c \leq c - 1$, a contradiction. This proves $DDC \Rightarrow AP$.
+
+\noindent$(\Leftarrow)$ Consider the non-empty set $S \subseteq \mathbb{R}$ bounded from above by $b_0 \in \mathbb{R}$.
+
+We want to apply $NIP$, so we define nested intervals around the upper bounds of $S$.
+\begin{proofpart}\label{defnips}
+$S$ is non-empty, so there exists $a_0 \in S$. Define $I_0=[a_0, b_0]$. The strategy now is to halve the interval and narrow it down but remain with the right endpoint of each interval ``on top of'' $S$ and with the left endpoint in $S$.
+
+Consider $m=\frac{a_0 + b_0}{2}$. If $[m, b_0] \cap S = \emptyset$ then let $a_1=a_0$ and $b_1=m$. If on the other hand $\exists s \in [m, b_0] \cap S$ then let $a_1=s$ and $b_1=b_0$. Define $I_1=[a_1, b_1]$. Repeat this process to define all $I_n, n \in \mathbb{N}$.
+
+The intervals $I_n$ have the following properties:
+
+\begin{description}
+\item[P1]: $I_{n+1} \subseteq I_n$. This is visible from the definition of $I_{n+1}$. Its endpoints are either endpoints of $I_n$ or are points from inside $I_n$.
+
+\item[P2]: $\forall n \in \mathbb{N}: b_n \text{ upper bound of } S$. We show this by induction on $n$. By choice $b_0$ is an upper bound. Now assume that $b_n$ is an upper bound. If $b_{n+1}=b_n$ then it is an upper bound. If $b_{n+1}=\frac{a_n + b_n}{2}$ then because $S \cap [b_{n+1}, b_n] = \emptyset$ and it also follows that $b_{n+1}$ is an upper bound \sidenote{Assume $b_{n+1}$ is not an upper bound of $S$, so there exists $s' \in S$ with $s' > b_{n+1}$. But by induction $b_n$ is an upper bound, which means $b_{n+1} < s' \leq b_n$, so $s' \in [b_{n+1}, b_n]$, which contradicts $S \cap [b_{n+1}, b_n] = \emptyset$.}.
+
+\item[P3]: $\forall n \in \mathbb{N}$: $I_n$ non-empty. This also follows by induction and by the field axioms of $\mathbb{R}$.
+
+\item[P4]: $\forall n \in \mathbb{N}: a_n \in S$. This follows by induction and definition of left endpoints.
+
+\item[P5]: $\forall n \in \mathbb{N}: |I_n| \leq \frac{b_0 - a_0}{2^n}$. \sidenote{We show this by induction on $n$. Base case $n=0$ holds by definition of $I_0$. Assume $|I_n| \leq \frac{b_0 - a_0}{2^n}$. For $I_{n+1}$ we observe that its length is either half that of $I_n$ or less than half when $[\frac{a_n+b_n}{2}, b_n] \cap S \neq \emptyset$}
+\end{description}
+\end{proofpart}
+
+$P1$ and $P3$ satisfy the requirements of $NIP$, so we know  $\alpha \in \cap_{n \in \mathbb{N}} I_n$ exists.
+
+We want to show that $\alpha = sup S$.
+
+\begin{proofpart}\label{alphasup}
+Assume $\alpha$ is not an upper bound of $S$. Then there exists $s \in S$ with $s > \alpha$. Let $\epsilon=s - \alpha > 0$. Using the Archimedean property we choose $m \in \mathbb{N}$ such that $I_m = [a_m, b_m]$ with $|I_m| < \epsilon$ \sidenote{We use property $P5$. From $|I_m| \leq \frac{b_0 - a_0}{2^m} < \epsilon$, we get $m > log_2(\frac{b_0 - a_0}{\epsilon})$.}. Then $\alpha \in I_m$, but $s \notin I_m$ and furthermore $b_m < s$. This is a contradiction to property $P2$, so $\alpha$ is an upper bound of $S$.
+
+Now assume $\alpha$ is not the smallest upper bound of $S$. Then there exists an upper bound $\beta$ of $S$ with $\beta < \alpha$. Let $\epsilon= \alpha - \beta > 0$. Again we choose $m \in \mathbb{N}$ such that $I_m = [a_m, b_m]$ with $|I_m| < \epsilon$. That pushes $a_m$ between $\beta$ and $\alpha$: $\beta < a_m \leq \alpha$. But according to property $P4$, $a_m \in S$, so $\beta < a_m$ contradicts the fact that $\beta$ is an upper bound of $S$. So $\alpha$ is the smallest upper bound of $S$: $\alpha=sup S$. This proves $NIP+AP \Rightarrow DDC$
+\end{proofpart}
+\end{proof}
+
+\begin{thm}
+$DDC \Leftrightarrow MC$
+\end{thm}
+
+\begin{proof}
+\noindent$(\Rightarrow)$ Given is a monotone increasing sequence $(a_n)$ bound from above. We define $A = \{a_n: n \in \mathbb{N}\}$, a set that is bound from above. From $DDC$ it follows that least upper bound $c$ of $A$ exists. We want to show that $\lim_{n \to \infty} a_n = c$. For all $\epsilon > 0$ we have $c - \epsilon < c$, so $c - \epsilon$ cannot be an upper bound of $A$ ($c$ is the least upper bound). That means that there exists $n_0 \in \mathbb{N}$ with $a_{n_0} > c - \epsilon$. Since the sequence is monotone increasing, we have
+\[
+\forall n \geq n_0: a_n \geq a_{n_0} > c - \epsilon \Rightarrow |c - a_n| < \epsilon
+\]
+which proves $a_n \to c$.
+
+\noindent$(\Leftarrow)$ We first want to show $MC \Rightarrow AP$. Given $MC$ assume that $AP$ doesn't hold, so there exists $x \in \mathbb{R}$ bigger than any natural number. This means $x$ is an upper bound for the sequence $a_n = n$, a monotone increasing sequence. From $MC$ it then follows that $a_n$ converges to a limit $c$. The sequence $b_n = n + 1$ is $a_n$ shifted to the left, so it is also convergent with the same limit $c$. Taking the limit on the sequence equation $b_n = a_n + 1$ we get $c = c + 1$, a contradiction. So $MC \Rightarrow AP$.
+
+To show that $MC \Rightarrow DDC$ we are given non-empty set $S$ with $a_0 \in S$ bound from above by $b_0 \in \mathbb{R}$. We define the same nested intervals as in the Proof Part \ref{defnips} of the proof of Theorem \ref{DDCeqNIP}. 
+
+The same properties $P_1$ to $P_5$ for $I_n$ as stated in Proof Part \ref{defnips} hold. The sequence $(a_n)$ is in $S$ and monotone increasing and the sequence $(b_n)$ is made of upper bounds of $S$ and is monotone decreasing. $(a_n)$ is bound from above and monotone so according to $MC$ it converges to a limit $\alpha$. 
+
+We want to show that $\alpha = supS$. We will use the exact same argument as in the Proof Part \ref{alphasup} of the proof of Theorem \ref{DDCeqNIP}\footnote{The only difference in the two proofs is that in this proof $MC$ ensures the existence of $\alpha$ and in the previous proof it was $NIP$.}. This proves $MC \Rightarrow DDC$
+\end{proof}
+
+\begin{thm}\label{DDCeqBW}
+$DDC \Leftrightarrow BW + AP$\footnote{Once again Bolzano-Weierstrass $BW$ is not enough to get back to Dedekind Completeness $DDC$. We need the field to be Archimedean $AP$.}
+\end{thm}
+
+\begin{proof}
+\noindent$(\Rightarrow)$ We have already seen $DDC \Rightarrow AP$ (Theorem \ref{DDCeqNIP}).
+
+\begin{proofpart}\label{bwSetup}
+ To prove $DDC \Rightarrow BW$ we are given a bounded sequence $(s_n)$:
+\[
+\exists a_0, b_0 \in \mathbb{R} \text{ such that } \forall n \in \mathbb{N}: a_0 \leq s_n \leq b_0 
+\]
+
+We define interval $I_0 = [a_0, b_0]$ and divide it in half at $c = \frac{a_0 + b_0}{2}$. At least one of the two intervals $[a_0, c]$, $[c, b_0]$ has an infinite number of elements of the sequence $s_n$\footnote{Otherwise $(s_n)$ would not be an infinite sequence.}. Define $I_1$ to be either $[a_0, c]$ or $[c, b_0]$ with an infinite number of elements of $s_n$. We repeat this process recursively, defining $I_m$ to be one of the halves of $I_{m - 1}$ that has an infinite number of elements of $(s_n)$. We get a sequence of nested intervals $(I_m)$ of decreasing length $|I_m| = \frac{a_0 + b_0}{2^m}$.
+
+We define $f:\mathbb{N} \to \mathbb{N}$ recursively as
+\[
+\begin{cases}
+f(1)&= 1\\
+f(n)&= min\{i > f(n-1): s_i \in I_{n-1}\}	
+\end{cases}
+\]
+
+The set $\{i > f(n-1): s_i \in I_{n-1}\}$ is a non-empty, infinite subset\footnote{By definition of $I_{n-1}$ there are an infinite number of elements $s_i$ in $I_{n-1}$, so there are an infinite number of indices $i$ in $\{i > f(n-1): s_i \in I_{n-1}\}$. Also any non-empty subset of $\mathbb{N}$ has a smallest element.} of $\mathbb{N}$, so its minimum exists and $f$ is well defined and by definition strictly monotone increasing. We define subsequence $(s'_n)$ as $s'_n = s_{f(n)}$, well defined because $f$ is strictly monotone increasing.
+
+\end{proofpart}
+
+\begin{proofpart}
+From $DDC$ we know that $NIP$ holds so $\alpha \in \cap_{m \in \mathbb{N}} I_m$ exists. We claim that $s'_n \to \alpha$.
+
+Because of $AP$ we have for all $\epsilon > 0$ there exists $n_0 \in \mathbb{N}$ such that $|I_{n_0}| < \epsilon$. We have $\alpha \in I_{n_0}$ and for all $n > f^{-1}(n_0): s'_n \in I_{n_0}$. This means for all $n > f^{-1}(n_0): |s'_n - \alpha| < \epsilon$ and $(s'_n)$ is a subsequence of $(s_n)$ that converges to $\alpha$.
+\end{proofpart}
+
+\noindent$(\Leftarrow)$ 
+
+\begin{proofpart}
+We are going to prove this direction by going through $NIP$. Given nested non-empty intervals $I_{n+1} \subseteq I_n$ we define sequence $(s_n)$ by choosing an arbitrary element from each $I_n$ and setting it to be $s_n$. According to $BW$ there exists a subsequence $(s'_n)$ of $(s_n)$ that converges $s'_n \to c$. We claim that $c \in \cap_{n \in \mathbb{N}} I_n$. 
+\end{proofpart}
+	
+\begin{proofpart}
+Assume $c \notin \cap_{n \in \mathbb{N}} I_n$. Then there must exist $n_0 \in \mathbb{N}$ such that $c \notin I_{n_0} = [a_{n_0}, b_{n_0}]$. Either $c < a_{n_0}$ or $c > b_{n_0}$. Let's consider $c < a_{n_0}$ (the other case is very similar). $\epsilon = \frac{a_{n_0} - c}{2} > 0$. We have $s'_n \to c$, so there exists $n_1$ such that $\forall n > n_1: |s'_n - c| < \epsilon$. So for $\forall n > max(n_0, n_1): s'_n < c + \epsilon < a_{n_0}$. But $(s'_n)$ is a subsequence of $(s_n)$ so there must exist $m \in \mathbb{N}$ with $f^{-1}(m) > max(n_0, n_1)$. We have $s'_m = s_{f^{-1}(m)} \in I_{f^{-1}(m)}$. So $s'_m \in I_{f^{-1}(m)} \subseteq I_{n_0}$ and $s'_m < a_{n_0}$ which is a contradiction. This means $c \in \cap_{n \in \mathbb{N}} I_n$ and $BW \Rightarrow NIP$ which together with $AP$ gets us to $DDC$ according to Theorem \ref{DDCeqNIP}.
+\end{proofpart}
+\end{proof}
+
+\begin{thm}
+$DDC \Leftrightarrow CC + AP$\footnote{As seen before with $NIP$ and $BW$ the Cauchy Criterion $CC$ is not enough to get back to Dedekind Completeness $DDC$. We need the field to be Archimedean $AP$.}
+\end{thm}
+
+\begin{proof}
+\noindent$(\Rightarrow)$ We have already seen $DDC \Rightarrow AP$ (Theorem \ref{DDCeqNIP}). To prove $DDC \Rightarrow CC$ we are given a Cauchy sequence $(a_n)$. We first show that $(a_n)$ is bounded. From the definition of a Cauchy sequence\footnote{A sequence $(a_n)$ is a Cauchy sequence if $\forall \epsilon > 0: \exists N \in \mathbb{N}$ such that $\forall m,n \geq N: |a_m - a_n| < \epsilon$.} we get  for $\epsilon = 1$ there exists $N \in \mathbb{N}$ such that $\forall m \geq N: |a_n - a_N| < 1 \Rightarrow |a_n| < 1 + |a_N|$. Define $M = max\{|a_1|, |a_2|, \ldots, |a_{N-1}|, |a_N| + 1\}$ and we have $\forall n \in \mathbb{N}: |a_n| < M$. 
+
+The Cauchy sequence $(a_n)$ is bounded so using $DDC \Rightarrow BW$ from Theorem \ref{DDCeqBW} we know there is a subsequence of $(a_n)$ that converges. Let $f: \mathbb{N} \to \mathbb{N}$ be the strictly monotone increasing function that defines the converging subsequence $a'_n = a_{f(n)}$ and let $\lim_{n \to \infty} a'_n = c$.
+
+For all $\epsilon >0$ we have: 
+\[
+\exists n_1 \in \mathbb{N} \text{ such that } \forall n \geq n_1: |a_n - a_{n_1}| < \frac{\epsilon}{2}
+\]
+
+and then 
+\[
+\exists n_2 \geq f^{-1}(n_1) \text{ such that } \forall n \geq n_2: |a'_n - c| < \frac{\epsilon}{2}
+\]
+
+So 
+\begin{align*}
+\forall n \geq n_2: |a_n - c| &= |a_n - a'_{n_2} + a'_{n_2} - c| \leq |a_n - a'_{n_2}| + |a'_{n_2} - c| \\
+                              &= |a_n - a_{f(n_2)}| + |a'_{n_2} - c| \leq \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon
+\end{align*}
+
+It means $(a_n)$ converges to $c$ and $DDC \Rightarrow CC + AP$.
+
+\noindent$(\Leftarrow)$ We will show that $CC + AP \Rightarrow BW$. We are given a bounded sequence $(s_n)$ and we use the same subsequence construction as in the Proof Part \ref{bwSetup} of Theorem \ref{DDCeqBW}. We claim that the so constructed subsequence $(s'_n)$ is a Cauchy sequence. Indeed for all $\epsilon > 0$ there exists $N \in \mathbb{N}$ such that $|I_N| < \epsilon$ (again we need $AP$ here). We then have:
+\[
+\forall m,n \geq N: s'_n, s'_m \in I_N \Rightarrow |s'_n - s'_m| \leq |I_N| < \epsilon
+\]
+
+So $(s'_n)$ is a Cauchy sequence and by $CC$ it converges which means that $(s_n)$ has a convergent subsequence. 
+\end{proof}
+
+\todo{Finish up.}
+
