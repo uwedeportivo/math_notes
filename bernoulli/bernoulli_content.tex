@@ -1,0 +1,259 @@
+In this note we explore some variants of the \emph{Bernoulli Inequality} by following this exercise\footnote{Exercise 1.18 on page 10 in \bibentry{carothers2000real}}.
+
+\vspace{10 mm}
+\begin{problem}
+Given $a > 0$ show that $(1 + a)^r > 1 + a r$ for any rational exponent $r > 1$.
+\end{problem}
+
+We need to declare what properties of the real numbers we are allowed to use. This exercise is in the beginning of Real Analysis, so we are not allowed to deploy any 'heavy machinery' like derivatives, convex functions etc. We assume the usual properties of $\mathbb{R}$ as an ordered field, but we have not shown yet that $m$-th roots exist for any positive real\footnote{We are actually going to sketch that out in this note because we need it. We have not defined exponentiation by a rational exponent yet.}.
+
+First we prove the inequality for natural numbers $n > 1$.
+
+\begin{thm}\label{bernoulli_naturals}
+Given $a > -1$ and $a \neq 0$, the inequality $(1 + a)^n > 1 + n a$ holds for any integer $n > 1$. 
+\end{thm}
+
+\begin{proof}
+
+We are going to use induction to prove this inequality. For $n = 2$ we have
+
+$$
+1 + 2 a + a^2 > 1 + 2 a
+$$
+
+which covers the base case. Assume that the inequality holds for $n$. For the induction step we have:
+
+\begin{align*}
+(1 + a)^{n+1} &= (1 + a) (1 + a)^n > (1 + a) (1 + n a) \\
+              &= 1 + n a + a + n a^2 \\
+              &= 1 + (n + 1) a + n a^2 > 1 + (n + 1) a
+\end{align*}
+
+\end{proof}
+
+The next theorem might look like it is coming out of nowhere but it is a step in the exercise and there is a connection with the Bernoulli inequality.
+
+\begin{thm}\label{bernoulli_increasing}
+The sequence $e_n = (1 + \frac{x}{n})^n$ is increasing for any $x > 0$.
+\end{thm}
+
+\begin{proof}
+
+We are actually going to use theorem \ref{bernoulli_naturals} to prove this theorem. There are two straightforward ways to prove that a sequence $e_n$ increases. One way is to show that $e_{n+1} - e_n > 0$ and the other way is to show that $\frac{e_{n+1}}{e_n} > 1$. The second way requires $e_n > 0$ which is the case here. We are choosing the second way because ratios more closely connect with multiplication and exponents and we hope to find opportunities to simplify the expressions.
+
+\begin{align*}
+\frac{e_{n+1}}{e_n} &= \frac{(1 + \frac{x}{n+1})^{n+1}}{(1 + \frac{x}{n})^n} \\
+                    &= (1 + \frac{x}{n}) (\frac{(1 + \frac{x}{n+1})}{(1 + \frac{x}{n})})^{n+1} \\
+                    &= (1 + \frac{x}{n}) (\frac{n + 1 + x}{n+x} \frac{n}{n+1})^{n+1} \\
+                    &= (1 + \frac{x}{n}) (\frac{(n + 1) n + n x}{(n+x) (n + 1)})^{n+1} \\
+                    &= (1 + \frac{x}{n}) (\frac{(n + 1) (n + x) - x}{(n+x) (n + 1)})^{n+1} \\
+                    &= (1 + \frac{x}{n}) ( 1 - \frac{x}{(n+x) (n + 1)})^{n+1}
+\end{align*}
+
+The last part of this long chain of equalities has a form that suggests theorem \ref{bernoulli_naturals}. We have to make sure that $\frac{-x}{(x + n)(n + 1)}$ satisfies the conditions of that theorem. 
+
+\begin{align*}
+\frac{-x}{(x + n)(n+1)} > - 1 &\Leftrightarrow x < (x + n)(n+1) \\
+                              &\Leftrightarrow x < n x + x + n^2 + n \\
+                              &\Leftrightarrow 0 < n x + n^2 + n
+\end{align*}
+
+which $x > 0$ satisfies, so we can apply theorem \ref{bernoulli_naturals}. It follows that
+
+\begin{align*}
+\frac{e_{n+1}}{e_n} &> (1 + \frac{x}{n}) (1 - (n+1) \frac{x}{(n+x) (n + 1)}) \\
+                    &= (1 + \frac{x}{n}) (1 - \frac{x}{n+x}) \\
+                    &= (1 + \frac{x}{n}) (\frac{n}{n+x}) \\
+                    &= 1
+\end{align*}
+
+\end{proof}
+
+Next we need $m$-th roots for any positive real number. 
+
+\begin{thm}\label{bernoulli_mth_root}
+Let $x \geq 0$ be a positive real number and let $n \geq 1$ be an integer. Then the set $R := \{y \in \mathbb{R}: y \geq 0 \text{, } y^n \leq x\}$ is not empty and bounded above.
+\end{thm}
+
+\begin{proof}
+
+$0 \in R$, so $R$ is not empty. To find upper bounds for $R$ we will look at two cases: $x > 1$ and $x \leq 1$.
+
+Let us start with $x > 1$. Then $x$ itself is an upper bound because any $y > x$ would have $y^n > x$.
+
+For $x \leq 1$ we find that $1$ is an upper bound because if $y > 1$ then $y^n > 1 \geq x$, which is a contradiction.
+
+\end{proof}
+
+Because of completeness we know that $sup(R)$ exists. We will denote $x^{\frac{1}{n}} := sup(R)$. We still have a little work to do. We are only going to prove properties of $x^{\frac{1}{n}}$ necessary for our inequality problem.
+
+\begin{thm}\label{bernoulli_mth_root_properties}
+\begin{flalign*}
+&\begin{aligned}
+\text{(i)}&\quad (x^{\frac{1}{n}})^n = x \\
+\text{(ii)}&\quad x^{\frac{1}{n}} \geq 0 \\
+\text{(iii)}&\quad x_1 > x_2 \Leftrightarrow  x_1^{\frac{1}{n}} > x_2^{\frac{1}{n}} \\
+\text{(iv)}&\quad (x^{\frac{1}{n}})^{\frac{1}{m}} = x^{\frac{1}{m n}}
+\end{aligned}&&
+\end{flalign*}
+\end{thm}
+
+\begin{proof}
+
+For notational simplicity, we define $z := x^{\frac{1}{n}} = sup(R)$.
+
+For (i) we prove by contradiction that $z^n < x$ and $z^n > x$ are impossible.
+
+First assume $z^n < x$. Then $x - z^n > 0$. For any small $0 < \epsilon < 1$ we have:
+
+\begin{align*}
+(z + \epsilon)^n &= \sum_{i = 0}^n \binom{n}{i} \epsilon^i z^{n - i} \\
+                 &= z^n + \sum_{i = 1}^n \binom{n}{i} \epsilon^i z^{n - i} \\
+                 &= z^n + \epsilon \sum_{i = 1}^n \binom{n}{i} \epsilon^{i-1} z^{n - i}
+\end{align*}
+
+Since $\epsilon < 1$ we can replace all the $\epsilon^{i-1}$ in the sum with $1$ to get the inequality:
+
+$$
+(z + \epsilon)^n \leq z^n + \epsilon \sum_{i = 1}^n \binom{n}{i} z^{n - i}
+$$
+
+We have the identity:
+
+$$
+\sum_{i = 1}^n \binom{n}{i} z^{n - i} = z^{n+1} - z^n
+$$
+
+so our inequality becomes:
+
+$$
+(z + \epsilon)^n \leq z^n + \epsilon (z^{n+1} - z^n)
+$$
+
+Now choose $\epsilon$ such that
+
+$$
+\epsilon < \frac{x - z^n}{z^{n+1} - z^n}
+$$
+
+and we have
+
+\begin{align*}
+(z + \epsilon)^n &\leq z^n + \epsilon (z^{n+1} - z^n) \\
+                 &< z^n + (\frac{x - z^n}{z^{n+1} - z^n}) (z^{n+1} - z^n) \\
+                 &= z^n + x - z^n = x
+\end{align*}
+
+This means that $(z + \epsilon)^n \in R$ but $z + \epsilon > z = sup(R)$, a contradiction. So $z^n$ cannot be smaller than $x$.
+
+Next assume $z^n > x$. Then $z^n - x > 0$. We proceed similarly to the previous case. For any small $0 < \epsilon < 1$ we have:
+
+\begin{align*}
+(z - \epsilon)^n &= \sum_{i = 0}^n \binom{n}{i} (-1)^i \epsilon^i z^{n - i} \\
+                 &= z^n + \sum_{i = 1}^n \binom{n}{i} (-1)^i \epsilon^i z^{n - i} \\
+                 &= z^n - \epsilon \sum_{i = 1}^n \binom{n}{i} (-1)^{i-1} \epsilon^{i-1} z^{n - i}
+\end{align*}
+
+Since $\epsilon < 1$ we can replace all the $\epsilon^{i-1}$ in the sum with $1$ to get the inequality:
+
+\begin{align*}
+(z - \epsilon)^n &\geq z^n - \epsilon \sum_{i = 1}^n \binom{n}{i} z^{n - i} \\
+                 &\geq z^n - \epsilon (z^{n+1} - z^n)
+\end{align*}
+
+Again choose $\epsilon$ such that
+
+$$
+\epsilon < \frac{z^n - x}{z^{n+1} - z^n}
+$$
+
+\begin{align*}
+(z - \epsilon)^n &\geq z^n - \epsilon (z^{n+1} - z^n) \\
+                 &> z^n - (\frac{z^n - x}{z^{n+1} - z^n}) (z^{n+1} - z^n) \\
+                 &= z^n + x - z^n = x
+\end{align*}
+
+Because $z - \epsilon < z$ there must exist  $y \in R$ such that $z - \epsilon < y$. We then have
+
+$$
+x < (z - \epsilon)^n < y^n \leq x
+$$
+
+which is a contradiction. So $z^n$ cannot be greater than $x$ either. The only possibility left is $z^n = x$.
+
+Both (ii) and (iii) follow from the identity:
+
+$$
+(a^n - b^n) = (a - b)(\sum_{i = 0}^{n-1} a^{n -1 - i}b^i)
+$$
+
+For (iv) we raise both sides to the power of $m n$:
+
+\begin{align*}
+((x^{\frac{1}{n}})^{\frac{1}{m}})^{m n} &= (((x^{\frac{1}{n}})^{\frac{1}{m}})^m)^n \\
+                                        &= (x^{\frac{1}{n}})^n \\
+                                        &= x \\
+                                        &= (x^{\frac{1}{m n}})^{m n}
+\end{align*}
+
+\end{proof}
+
+We are almost ready to define exponentiation by a positive rational exponents. We need one more theorem:
+
+\begin{thm}\label{bernoulli_rational_powers}
+Given $p, q, p', q' \in \mathbb{N}$ such that $p q' = p' q$ and with any real number $x > 0$ we have
+
+$$
+(x^{\frac{1}{q}})^p = (x^{\frac{1}{q'}})^{p'}
+$$
+
+\end{thm}
+
+\begin{proof}
+
+We have $p q' = p' q$. We define $y = x^{\frac{1}{p q'}} = x^{\frac{1}{p' q}}$.
+
+We know from equality (iv) in theorem \ref{bernoulli_mth_root_properties} that
+
+$$
+y = (x^{\frac{1}{q'}})^{\frac{1}{p}} = (x^{\frac{1}{q}})^{\frac{1}{p'}}
+$$
+
+so
+
+$$
+y^{p} = x^{\frac{1}{q'}} \text{, and } y^{p'} = x^{\frac{1}{q}}
+$$
+
+We then have
+
+$$
+(x^{\frac{1}{q}})^p = (y^{p'})^p = (y^{p})^{p'} = (x^{\frac{1}{q'}})^{p'}
+$$
+
+\end{proof}
+
+We can now define exponentiation by $r \in \mathbb{Q}$, $r > 0$. Let $r = \frac{p}{q}$ and $x > 0$. Then $x^r := (x^{\frac{1}{q}})^p$ and we know this is well defined.
+
+We are ready to prove the Bernoulli inequality for rational exponents.
+
+The exponent $r = \frac{p}{q}$ is greater than one, so $p > q$.
+
+We know from theorem \ref{bernoulli_increasing} that $e_n$ is increasing, so:
+
+$$
+(1 + \frac{x}{p})^{p} > (1 + \frac{x}{q})^{q}
+$$
+
+We choose $x = a p$ and have:
+
+$$
+(1 + a)^p > (1 + a r)^q
+$$
+
+We take the $q$-th root and we know from property (iii) of theorem \ref{bernoulli_mth_root_properties} that
+
+$$
+(1 + a)^r > 1 + a r
+$$
+
