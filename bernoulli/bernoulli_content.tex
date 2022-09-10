@@ -257,3 +257,86 @@ $$
 (1 + a)^r > 1 + a r
 $$
 
+which proves the Bernoulli inequality for rational exponents. We cannot prove it yet for any real exponent without resorting to limits which forces us to lose the inequality strictness. Instead let us close this note with three applications of the Bernoulli inequality\footnote{Exercises 1.19 and 1.20 on page 10 in \bibentry{carothers2000real}}.
+
+\begin{thm}
+For $0 < c < 1$ we have $c^n \rightarrow 0$.
+\end{thm}
+
+\begin{proof}
+
+\begin{align*}
+\frac{1}{c^n} &= (\frac{1}{c})^n \\
+              &> 1 + n (\frac{1}{c} - 1) \\
+              &> n (\frac{1}{c} - 1)
+\end{align*}
+
+so 
+
+$$
+0 < c^n < \frac{1}{n} \frac{c}{1-c}
+$$
+
+and $c^n$ is being squeezed into converging to zero.
+\end{proof}
+
+\begin{thm}
+For $c > 0$ we have $\sqrt[n]{c} \rightarrow 1$.
+\end{thm}
+
+\begin{proof}
+We have two cases: $c \geq 1$ and $c < 1$. Let us first deal with $c \geq 1$:
+
+\begin{align*}
+(\sqrt[n]{c})^n &> 1 + n (\sqrt[n]{c} - 1) \\
+            c - 1  &> n (\sqrt[n]{c} - 1) \\
+           \frac{c-1}{n} + 1 &> \sqrt[n]{c} \geq 1
+\end{align*}
+
+and $\sqrt[n]{c}$ is squeezed into converging to one.
+
+For the case $c < 1$ we consider its reciprocal $\sqrt[n]{\frac{1}{c}}$ and the result follows from the previous case.
+\end{proof}
+
+\begin{thm}
+For $a_i > 0 \text{, } 1 \leq i \leq n$ we have\footnote{This is known as the AGM inequality, or Arithmetic Geometric Mean inequality.}
+
+$$
+\sqrt[n]{\prod_{i = 1}^n a_i} \leq \frac{1}{n} \sum_{i = 1}^n a_i
+$$
+
+\end{thm}
+
+\begin{proof}
+We are going to use Bernoulli and induction (as the exercise hint suggests). For $n = 2$ we have
+
+\begin{align*}
+& \sqrt{a_1 a_2} \leq \frac{1}{2} (a_1 + a_2) \\
+&\Leftrightarrow a_1 a_2 \leq \frac{1}{4} (a_1^2 + 2 a_1 a_2 + a_2^2) \\
+&\Leftrightarrow 4 a_1 a_2 \leq a_1^2 + 2 a_1 a_2 + a_2^2 \\
+&\Leftrightarrow 0 \leq (a_1 - a_2)^2
+\end{align*}
+
+This takes care of the base case. For the induction step we assume AGM holds for $n$. We introduce some notation to simplify our expressions: $s_n := \sum_{i = 1}^n a_i$, $\bar{a}_n := \frac{s_n}{n}$, $p_n := \prod_{i = 1}^n a_i$ and finally $\bar{g}_n := \sqrt[n]{p_n}$.
+
+We assume $\bar{g}_n \leq \bar{a}_n$ and have to prove $\bar{g}_{n+1} \leq \bar{a}_{n+1}$.
+
+We consider $(\frac{\bar{a}_{n+1}}{\bar{a}_n})^{n+1}$ and have:
+
+\begin{align*}
+(\frac{\bar{a}_{n+1}}{\bar{a}_n})^{n+1} &= (\frac{n}{n+1} \frac{s_{n+1}}{s_n})^{n+1} \\
+ &> 1 + (n + 1) (\frac{n}{n+1} \frac{s_{n+1}}{s_n} - 1) \\
+ &= 1 + (n + 1) \frac{n s_{n+1} - n s_n - s_n}{(n+1) s_n} \\
+ &= 1 + \frac{n a_{n+1} - s_n}{s_n} \\
+ &= \frac{n a_{n+1}}{s_n} \\
+ &= \frac{a_{n+1}}{\bar{a}_n}
+\end{align*}
+
+so 
+
+$$
+(\bar{a}_{n+1})^{n+1} > a_{n+1} (\bar{a}_n)^n \geq  a_{n+1} p_n = p_{n+1}
+$$
+
+which concludes the induction step and proves AGM.
+\end{proof}
