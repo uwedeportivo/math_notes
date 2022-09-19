@@ -164,7 +164,7 @@ We have $q \in \mathbb{Z}$, $\sum_{i = 1}^j d_i 2^{j-i} \in \mathbb{Z}$, but $\s
 
 We arrived at a neat result: if the binary expansion of $\frac{a}{a+b}$ is finite with $k$ digits, then the loop terminates after $k$ steps.
 
-What can we say if the expansion is not finite but instead has a repeating pattern with a prefix and a period (the only other option \footnote{That is because $\frac{a}{a+b} \in \mathbb{Q}$.}) ? For starters, we can use a contradiction similar to the earlier one to prove that the loop does not terminate. Consider the infinite binary expansion:
+What can we say if the expansion is not finite but instead has a repeating pattern with a prefix and a period (the only other option \footnote{That is because $\frac{a}{a+b} \in \mathbb{Q}$. See below for why.}) ? For starters, we can use a contradiction similar to the earlier one to prove that the loop does not terminate. Consider the infinite binary expansion:
 
 $$
   \frac{a}{n} = \sum_{i = 1}^\infty d_i 2^{-i}
@@ -184,4 +184,194 @@ $$
 
 The left side and the first sum on the right both belong to $\mathbb{Z}$ but the second sum does not, which is a contradiction. This means, that $\forall k: a_k > 0$ and the loop does not terminate.
 
-\todo{Finish up this case and explain period of infinite sequence.}
+At this point we will do a small digression and prove some theorems about decimal expansion. 
+
+\begin{thm}\label{while_a_decimal_expansion_one}
+Given an integer $p > 1$, the series
+
+$$
+\sum_{i=1}^\infty \frac{d_i}{p^i}
+$$
+
+with $d_i \in \{0, 1, \ldots, p-1\}$ converges to a value $x \in [0, 1]$.
+\end{thm}
+
+\begin{proof}
+
+$$
+\sum_{i=1}^n \frac{d_i}{p^i} \leq \sum_{i=1}^n \frac{p-1}{p^i} \xrightarrow[n \to \infty]{} 1
+$$
+
+so the series is bounded and will converge.
+\end{proof}
+
+\begin{thm}\label{while_a_decimal_expansion_one}
+For every $x \in [0, 1]$ there exists a decimal expansion with base $p > 1$ such that
+$$
+x = \sum_{i=1}^\infty \frac{d_i}{p^i}
+$$
+
+with $d_i \in \{0, 1, \ldots, p-1\}$.
+\end{thm}
+
+\begin{proof}
+
+We divide the interval $[0, 1]$ into $p$ intervals $[\frac{i}{p}, \frac{i+1}{p}]$ with $0 \leq i < p$. Since $[0, 1] = \bigcup_{i = 0}^{p-1} [\frac{i}{p}, \frac{i+1}{p}]$ we know there exists at least one index $i$ with $x \in [\frac{i}{p}, \frac{i+1}{p}]$. We set $d_1 = i$ and subdivide $[\frac{i}{p}, \frac{i+1}{p}]$ into $p$ segments $[\frac{i}{p}, \frac{i+1}{p}] = \bigcup_{j = 0}^{p-1} [\frac{d_1}{p} + \frac{j}{p^2},  \frac{d_1}{p} + \frac{j+1}{p^2}]$. $x$ is in one of these subintervals and we set $d_2$ to be the index of that subinterval and continue in this manner recursively defining all $d_i$. Because of the nested interval property with monotone decreasing length this converges to $x$.
+
+Another way to prove it is like this:
+
+The case where $x=0$ is trivial (just set all $d_i=0$). 
+
+For $x > 0$ we have:
+
+The set $N_1 = \{k \in \mathbb{N}_0: \frac{k}{p} < x\}$ is a set of non-negative integers strictly bounded above by $p$, so it has a largest element and we set $d_1 = \text{max}(N_1)$. Then $x \leq \frac{d_1 + 1}{p}$ (otherwise $d_1 + 1 \in N_1$ and $d_1$ wouldn't be the largest element of $N_1$). We therefore have
+
+$$
+\frac{d_1}{p} < x \leq \frac{d_1 + 1}{p}
+$$
+
+We continue and look at $N_2 = \{k \in \mathbb{N}_0: \frac{d_1}{p} + \frac{k}{p^2} < x\}$. Again the set $N_2$ is strictly bounded above by $p$ and we set $d_2 = \text{max}(N_2)$. Again we have:
+
+$$
+\frac{d_1}{p} + \frac{d_2}{p^2} < x \leq \frac{d_1}{p} + \frac{d_2 + 1}{p^2}
+$$
+
+Having defined $d_1, d_2, \ldots d_{n-1}$ we can recursively define $d_n=\text{max}(N_n)$ with 
+
+$$
+N_n = \{k \in \mathbb{N}_0: \sum_{i = 1}^{n-1} \frac{d_i}{p^i} + \frac{k}{p^n} < x\}
+$$
+
+Again $p \notin N_n$, so the definition is valid and the following inequalities hold:
+
+$$
+\sum_{i = 1}^n \frac{d_i}{p^i} < x \leq \sum_{i = 1}^{n-1} \frac{d_i}{p^i} + \frac{d_n + 1}{p^n}
+$$
+
+We define $u_n = \sum_{i = 1}^n \frac{d_i}{p^i}$, $v_n = \sum_{i = 1}^{n-1} \frac{d_i}{p^i} + \frac{d_n + 1}{p^n}$ and $w_n = \frac{d_{n+1} + 1}{p^{n+1}}$. $u_n$ is monotone increasing and bounded above, so it converges. For $v_n$ we have
+
+\begin{align*}
+& v_n \geq v_{n+1} \\
+&\Leftrightarrow \sum_{i = 1}^{n-1} \frac{d_i}{p^i} + \frac{d_n + 1}{p^n} \geq \sum_{i = 1}^n \frac{d_i}{p^i} + \frac{d_{n+1} + 1}{p^{n+1}} \\
+&\Leftrightarrow \frac{d_n + 1}{p^n} \geq \frac{d_n}{p^n} + \frac{d_{n+1} + 1}{p^{n+1}} \\
+&\Leftrightarrow \frac{1}{p^n} \geq \frac{d_{n+1} + 1}{p^{n+1}} \\
+&\Leftrightarrow p \geq d_{n+1} + 1
+\end{align*}
+
+which holds by definition of $d_{n+1}$. So $v_n$ is monotone decreasing and bounded below, therefore it converges too. $w_n$ converges to zero and $v_n = u_{n-1} + w_n$ therefore 
+
+$$
+lim_{n \to \infty} u_n = lim_{n \to \infty} v_n = x
+$$
+
+\end{proof}
+
+\begin{thm}\label{while_a_decimal_expansion_two}
+Given is base $p > 1$ and
+$$
+x = \sum_{i=1}^n \frac{d_i}{p^i}
+$$
+
+with $d_i \in \{0, 1, \ldots, p-1\}$ and $d_n \neq 0$. Then there are two base $p$ expansions of $x$.
+\end{thm}
+
+\begin{proof}
+
+The first expansion is $x = \sum_{i=1}^\infty \frac{d_i}{p^i}$ with $d_i = 0$ for $i > n$. For the second expansion we define the following series:
+
+$$
+y = \sum_{i=1}^{n-1} \frac{d_i}{p^i} + \frac{d_n - 1}{p^n} + \sum_{i=n+1}^\infty \frac{p-1}{p^i}
+$$
+
+and prove that $y = x$. Then the two expansions are $0.d_1d_2 \ldots d_n00000 \ldots$ and $0.d_1d_2 \ldots (d_n-1)(p-1)(p-1)(p-1) \ldots$
+
+To prove that $y = x$ we look at
+
+\begin{align*}
+\sum_{i=n+1}^\infty \frac{p-1}{p^i} &= \frac{p-1}{p^n} \sum_{i=1}^\infty \frac{1}{p^i} \\
+                                    &= \frac{p-1}{p^n} (\sum_{i=0}^\infty \frac{1}{p^i} - 1) \\
+                                    &= \frac{p-1}{p^n} (\frac{p}{p-1} - 1) \\
+                                    &= \frac{p-1}{p^n} \frac{1}{p-1} \\
+                                    &= \frac{1}{p^n}
+\end{align*}
+
+So $y$ becomes
+
+$$
+y = x - \frac{1}{p^n} + \frac{1}{p^n} = x
+$$
+\end{proof}
+
+\begin{thm}\label{while_a_decimal_expansion_three}
+If we disallow series with infinitely repeated $(p-1)$ tail, any $x \in [0, 1]$ has a unique decimal expansion in base $p$.
+\end{thm}
+
+\begin{proof}
+Assume two decimal expansions where both agree until index $k-1$ and index $k$ is the first index where they differ.
+
+\begin{align*}
+x &= \sum_{i = 1}^{k-1} \frac{d_i}{p^i} + \frac{e_k}{p^k} + \sum_{i = k + 1}^\infty \frac{e_i}{p^i} \\
+y &= \sum_{i = 1}^{k-1} \frac{d_i}{p^i} + \frac{f_k}{p^k} + \sum_{i = k + 1}^\infty \frac{f_i}{p^i}
+\end{align*}
+
+Without loss of generality assume $e_k < f_k$. 
+
+We have
+
+\begin{align*}
+y - x &= \sum_{i = 1}^{k-1} \frac{d_i}{p^i} + \frac{f_k}{p^k} + \sum_{i = k + 1}^\infty \frac{f_i}{p^i} - \sum_{i = 1}^{k-1} \frac{d_i}{p^i} - \frac{e_k}{p^k} - \sum_{i = k + 1}^\infty \frac{e_i}{p^i} \\
+      &= \frac{f_k - e_k}{p^k} + \sum_{i = k + 1}^\infty \frac{f_i}{p^i} - \sum_{i = k + 1}^\infty \frac{e_i}{p^i} \\
+      &= \frac{f_k - e_k}{p^k} + \frac{1}{p^k} (\sum_{i = 1}^\infty \frac{f_{k+i}}{p^i} - \sum_{i = 1}^\infty \frac{e_{k+i}}{p^i})
+\end{align*}
+
+We denote $u = \sum_{i = 1}^\infty \frac{f_{k+i}}{p^i}$ and $v = \sum_{i = 1}^\infty \frac{f_{k+i}}{p^i}$. Since we disallowed repeated $(p-1)$ tail, we know that $0 \leq u < 1$ and $0 \leq v < 1$, so $-1 < u - v < 1$. It follows that
+
+$$
+0 \leq \frac{f_k - e_k - 1}{p^k} < y - x < \frac{f_k - e_k + 1}{p^k}
+$$
+
+and $x \neq y$.
+\end{proof}
+
+\begin{thm}\label{while_a_decimal_expansion_four}
+$x \in [0, 1] \cap \mathbb{Q}$ if and only if its decimal expansion in base $p > 1$ is either finite or has a prefix (of length zero or more) and an infinitely repeating non-zero length pattern tail.
+\end{thm}
+
+\begin{proof} \
+
+$(\Rightarrow)$:
+
+$x \in [0, 1] \cap \mathbb{Q}$, so there exist $m, n \in \mathbb{N}$ with $m < n$ and $x = \frac{m}{n}$. We basically do the long division and present an expansion that will have a repeating tail (if it isn't finite). Let $k \in \mathbb{N}$ be the smallest integer such that $m p^k \geq n$ and we do division:
+
+$$
+m p^k = n q + r
+$$
+
+with $0 \leq r < n$. Because $k$ is the smallest integer with $m p^k \geq n$ we have $n p > m p^k$ (otherwise $k-1$ would be a smaller integer satisfying the same). That means $n p > n q + r$ and thus $p > \frac{n p - r}{n} > q$. This gives us $k-1$ zeros and the first non-zero digit in the expansion, namely $q$:
+
+\begin{align*}
+\frac{m}{n} &= \frac{1}{p^k} \frac{m p^k}{n} \\
+            &= \frac{1}{p^k} \frac{ n q + r}{n} \\
+            &= \frac{q}{p^k} + \frac{r}{n}
+\end{align*}
+
+We repeat this process with $\frac{r}{n}$. There are only $n$ possible remainders, so if it doesn't end with a remainder of zero it must eventually get a previously seen remainder and so the expansion will repeat itself. This creates an expansion with an infinitely repeating non-zero length pattern tail. Since it isn't finite, we can disallow repeating $(p-1)$ and from the expansion uniqueness theorem we have proved the $(\Rightarrow)$ direction.
+
+$(\Leftarrow)$:
+
+This direction is easy. If it is a finite sum, then it is rational since all the parts are rational. If it is infinite repeating we can eliminate the non-repeating prefix since it is finite and rational and shift the rest. So we can concentrate on a repeating series with a period $k-1$:
+
+\begin{align*}
+x &= \sum_{i = 0}^\infty (\frac{1}{p^{k i}} \sum_{j = 1}^{k-1} \frac{d_j}{p^j}) \\
+  &= (\sum_{j = 1}^{k-1} \frac{d_j}{p^j}) \sum_{i = 0}^\infty \frac{1}{p^{k i}} \\
+  &= (\sum_{j = 1}^{k-1} \frac{d_j}{p^j}) (1 + \sum_{i = 1}^\infty \frac{1}{p^{k i}}) \\
+  &= (\sum_{j = 1}^{k-1} \frac{d_j}{p^j}) (1 + \sum_{i = 1}^\infty (\frac{1}{p^{k}})^i) \\
+  &= (\sum_{j = 1}^{k-1} \frac{d_j}{p^j}) (1 + \frac{p^k}{p^k -1})
+\end{align*}
+
+which is a rational expression.
+\end{proof}
+
+We return to our problem. We now know the expansion of $\frac{a}{a+b}$ is repeating a period if it doesn't terminate. We will show that the loop also repeats a period of the same length.
+
+\todo{Finish up.}
