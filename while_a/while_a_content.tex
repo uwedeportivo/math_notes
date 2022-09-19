@@ -359,7 +359,7 @@ We repeat this process with $\frac{r}{n}$. There are only $n$ possible remainder
 
 $(\Leftarrow)$:
 
-This direction is easy. If it is a finite sum, then it is rational since all the parts are rational. If it is infinite repeating we can eliminate the non-repeating prefix since it is finite and rational and shift the rest. So we can concentrate on a repeating series with a period $k-1$:
+This direction is easy. If it is a finite sum, then it is rational since all the parts are rational. If it is infinite repeating we can eliminate the non-repeating prefix since it is finite and rational and shift the rest. So we can concentrate on a repeating series with a period of length $k-1$:
 
 \begin{align*}
 x &= \sum_{i = 0}^\infty (\frac{1}{p^{k i}} \sum_{j = 1}^{k-1} \frac{d_j}{p^j}) \\
@@ -374,4 +374,67 @@ which is a rational expression.
 
 We return to our problem. We now know the expansion of $\frac{a}{a+b}$ is repeating a period if it doesn't terminate. We will show that the loop also repeats a period of the same length.
 
-\todo{Finish up.}
+\begin{thm}\label{while_a_decimal_expansion_five}
+If $\frac{a}{n}$ has an expansion in base $p$ which repeats a period of $k$ digits infinitely, then
+
+$$
+a p^k \equiv a \mod n
+$$  
+\end{thm}
+
+\begin{proof}
+We have $\frac{a}{n} = 0.\overline{d_1 d_2 d_3 \ldots d_k}$ which means
+
+\begin{align*}
+\frac{a}{n} &= 0.\overline{d_1 d_2 d_3 \ldots d_k} \\
+            &= \sum_{i = 1}^k \frac{d_i}{p^i} + \frac{1}{p^k} (\sum_{i = 1}^k \frac{d_i}{p^i} + \frac{1}{p^k} (\sum_{i = 1}^k \frac{d_i}{p^i} + \ldots \\
+            &= \sum_{i = 1}^k \frac{d_i}{p^i} + \frac{1}{p^k} \frac{a}{n}
+\end{align*}
+
+We multiply both sides by $n p^k$ and get
+
+$$
+a p^k = \sum_{i = 1}^k n d_i p^{k - i} + a
+$$
+
+which proves the theorem.
+\end{proof}
+
+\begin{thm}\label{while_a_decimal_expansion_six}
+If $\frac{a}{n}$ has an expansion in base $p$ which has a prefix and then repeats a period of $k$ digits infinitely, then
+
+$$
+a p^k \equiv a \mod n
+$$  
+\end{thm}
+
+\begin{proof}
+We have $\frac{a}{n} = 0.e_1 e_2 e_3 \ldots e_l \overline{d_1 d_2 d_3 \ldots d_k}$ which means
+
+\begin{align*}
+\frac{a}{n} &= 0.e_1 e_2 e_3  \ldots e_l \overline{d_1 d_2 d_3 \ldots d_k} \\
+            &= \sum_{i = 1}^l \frac{e_i}{p^i} + \frac{1}{p^l} (0.\overline{d_1 d_2 d_3 \ldots d_k}) \\
+\end{align*}
+
+This means
+
+$$
+\frac{a p^l - \sum_{i = 1}^l p^{l-i} e_i n}{n} = 0.\overline{d_1 d_2 d_3 \ldots d_k}
+$$
+
+We can then apply the previous theorem to a new $a' := a p^l - \sum_{i = 1}^l p^{l-i} e_i n$ and see that
+
+$$
+a' p^k \equiv a' \mod n
+$$
+
+But $a' \equiv a p^l \mod n$, so 
+
+$$
+a p^{k+l} \equiv a p^l \mod n
+$$
+
+or $a p^k \equiv a \mod n$. 
+\end{proof}
+
+We combine this last result with the invariant \ref{p4} to see that $a_{i + k} = a_i$ and the loop repeats values with period $k$.
