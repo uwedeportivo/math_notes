@@ -36,5 +36,8 @@ This means the loop invariant $s(n) = n - 9 k$ is maintained during the healing 
 \caption{Example with $n=112$. In each row the boxes represent the digits in the decimal representation (least significant on the right). In the first row the representation has only one digit, the number itself. Going down, each row is one step in the healing of the representation while maintaining the loop invariant $s(112) = 112 - k \cdot 9$.}
 \end{figure}
 
+Obviously one could just observe that $10 \equiv 1 \mod 3$, so also $10^k \equiv 1 \mod 3$ and the divisibility rule follows immediately. 
 
-
+$$
+n = \sum_{i = 0} d_i 10^i \equiv \sum_{i = 0} d_i \mod 3
+$$

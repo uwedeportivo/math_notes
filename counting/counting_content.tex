@@ -123,3 +123,28 @@ It means $F(n_1) \ne F(n_2)$ and $F$ is one-to-one.
 Now pick an arbitrary $a \in \bigcup_{n=1}^\infty A_n$. Then there exists $i \in \mathbb{N}$ with $a \in A_i$. \footnote{We assume here the $A_i$ are disjoint, if not we make them disjoint and their union stays the same.} There also exists $j \in \mathbb{N}$ with $f_i(j) = a$. The pair $(i, j)$ is in
 $\mathbb{N} \times \mathbb{N}$, so there exists $n \in \mathbb{N}$ with $g(n)=(i, j)$. It follows that $F(n)=a$ and F is onto. 
 \end{proof}
+
+Let us use this last theorem to prove the following statement\footnote{Exercise 0.0.1 on page xiii from \bibentry{tao2021introduction}.}:
+
+\begin{thm}
+If $(x_\alpha)_{\alpha \in A}$ is a collection of numbers $(x_\alpha) \in [0, +\infty]$ such that $\sum_{\alpha \in A} x_\alpha < \infty$, then $x_\alpha = 0$ for all but at most countably many $\alpha \in A$, even if $A$ itself is uncountable.
+\end{thm}
+
+\begin{proof}
+
+We adopt the same definition of sum over the collection of numbers as in Terence Tao's book:
+
+$$
+\sum_{\alpha \in A} x_\alpha = \sup\{\sum_{\alpha \in F} x_\alpha: F \subset A, F \text{ finite}\}
+$$
+
+We will use the harmonic series $\sum_{n=1}^\infty \frac{1}{n}$ as our yardstick. For each $n \in \mathbb{N}$ we define the subset $A_n \subset A$:
+
+$$
+A_n = \{\alpha: \alpha \in A, x_\alpha \geq \frac{1}{n}\}
+$$
+
+The sets $A_n$ have to be finite because otherwise the sum $\sum_{\alpha \in A_n} x_\alpha$ would be an infinite sum bigger than the harmonic series, so it would diverge which is a contradiction to $\sum_{\alpha \in A} x_\alpha < \infty$.
+
+We also know that $\bigcup_{n=1}^\infty A_n$ collect all the non-zero elements $x_\alpha$ and according to the previous theorem this union is countable. 
+\end{proof}
