@@ -138,13 +138,13 @@ $$
 \sum_{\alpha \in A} x_\alpha = \sup\{\sum_{\alpha \in F} x_\alpha: F \subset A, F \text{ finite}\}
 $$
 
-We will use the harmonic series $\sum_{n=1}^\infty \frac{1}{n}$ as our yardstick. For each $n \in \mathbb{N}$ we define the subset $A_n \subset A$:
+For each $n \in \mathbb{N}$ we define the subset $A_n \subset A$:
 
 $$
 A_n = \{\alpha: \alpha \in A, x_\alpha \geq \frac{1}{n}\}
 $$
 
-The sets $A_n$ have to be finite because otherwise the sum $\sum_{\alpha \in A_n} x_\alpha$ would be an infinite sum bigger than the harmonic series, so it would diverge which is a contradiction to $\sum_{\alpha \in A} x_\alpha < \infty$.
+The sets $A_n$ have to be finite because otherwise the sum $\sum_{\alpha \in A_n} x_\alpha$ would be an infinite sum of numbers not converging to zero, therefore it would diverge which is a contradiction to $\sum_{\alpha \in A} x_\alpha < \infty$.
 
 We also know that $\bigcup_{n=1}^\infty A_n$ collect all the non-zero elements $x_\alpha$ and according to the previous theorem this union is countable. 
 \end{proof}
