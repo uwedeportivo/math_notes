@@ -100,20 +100,20 @@ Since all the $T_{x_i}$ are non-empty and $\{1, \ldots, n\}$ is finite, we event
 
 The sets $T_{x_i}$ and their corresponding cycles are by construction pairwise disjoint. We also have $\{1, \ldots, n\} = \bigcup^{k}_{i=1} T_{x_i}$.
 
-We define the permutation $\sigma$ as the product of the cycles chosen above:
+We define the permutation $\rho$ as the product of the cycles chosen above:
 
 $$
-\sigma=\prod\limits^k_{i=1} \langle x_i \rangle
+\rho=\prod\limits^k_{i=1} \langle x_i \rangle
 $$
 
-and show that $\sigma=\pi$. 
+and show that $\rho=\pi$. 
 
 For all $y \in \{1, \ldots, n\}$ there exists a unique $1 \leq i \leq k$ such that $y \in T_{x_i}$.\footnote{Because $\{1, \ldots, n\} = \bigcup^{k}_{i=1} T_{x_i}$ and $T_{x_1}, T_{x_2}, \ldots, T_{x_k}$ are pairwise disjoint and form a partition of $\{1, \ldots, n\}$.}
 
-So $y = \pi^j(x_i)$ for some index $0 \leq j < ord(x_i)$. Since the cycles are disjoint, only cycle $\langle x_i \rangle$ from $\sigma$ affects $y$. We have
+So $y = \pi^j(x_i)$ for some index $0 \leq j < ord(x_i)$. Since the cycles are disjoint, only cycle $\langle x_i \rangle$ from $\rho$ affects $y$. We have
 
 \begin{align*}
-\sigma(y) &= \langle x_i \rangle (y) \\
+\rho(y) &= \langle x_i \rangle (y) \\
         &= \langle x_i \rangle (\pi^j(x_i)) \\
         &= \pi^{j+1}(x_i) \\
         &= \pi(\pi^j(x_i)) \\
@@ -122,33 +122,33 @@ So $y = \pi^j(x_i)$ for some index $0 \leq j < ord(x_i)$. Since the cycles are d
 
 \end{proof}
 
-Given two permutations $\pi, \sigma \in S_n$, the product $\sigma \pi \sigma^{-1}$ is called a conjugate\index{conjugate} of $\pi$.
+Given two permutations $\pi, \rho \in S_n$, the product $\rho \pi \rho^{-1}$ is called a conjugate\index{conjugate} of $\pi$.
 
 \begin{thm}\label{conjugationPreservesCycles}
 Conjugation preserves cycle structure, i.e. conjugates have cycles of the same length with the same multiplicity.
 \end{thm}
 
-\marginnote{Incidentally Theorem \ref{conjugationPreservesCycles} is the reason why the products $\pi \sigma$ and $\sigma \pi$ have the same cycle structure. Even though in general $\pi \sigma \neq \sigma \pi$, $\pi \sigma$ and $\sigma \pi$ are conjugate. This was the question asked in Exercise 5.5 on page 34 from \bibentry{artin10}.}
+\marginnote{Incidentally Theorem \ref{conjugationPreservesCycles} is the reason why the products $\pi \rho$ and $\rho \pi$ have the same cycle structure. Even though in general $\pi \rho \neq \rho \pi$, $\pi \rho$ and $\rho \pi$ are conjugate. This was the question asked in Exercise 5.5 on page 34 from \bibentry{artin10}.}
 
 \begin{proof}
-Consider $\pi, \sigma \in S_n$. From Theorem \ref{cycleDecomposition} we know that $\pi$ is a product of disjoint cycles $\pi = \prod^k_{i=1} \sigma_i$. For the conjugate $\sigma \pi \sigma^{-1}$ we can write:
+Consider $\pi, \rho \in S_n$. From Theorem \ref{cycleDecomposition} we know that $\pi$ is a product of disjoint cycles $\pi = \prod^k_{i=1} \rho_i$. For the conjugate $\rho \pi \rho^{-1}$ we can write:
 
 \begin{align*}
-\sigma \pi \sigma^{-1} &= \sigma \sigma_1 \sigma_2 \sigma_3 \ldots \sigma_k \sigma^{-1} \\
-&= \sigma \sigma_1 (\sigma^{-1}\sigma) \sigma_2 (\sigma^{-1} \ldots \sigma) \sigma_k \sigma^{-1} \\
-&= (\sigma \sigma_1 \sigma^{-1}) (\sigma \sigma_2 \sigma^{-1}) \ldots (\sigma \sigma_k \sigma^{-1}) \\
-&= \prod\limits^k_{i=1} \sigma \sigma_i \sigma^{-1}
+\rho \pi \rho^{-1} &= \rho \rho_1 \rho_2 \rho_3 \ldots \rho_k \rho^{-1} \\
+&= \rho \rho_1 (\rho^{-1}\rho) \rho_2 (\rho^{-1} \ldots \rho) \rho_k \rho^{-1} \\
+&= (\rho \rho_1 \rho^{-1}) (\rho \rho_2 \rho^{-1}) \ldots (\rho \rho_k \rho^{-1}) \\
+&= \prod\limits^k_{i=1} \rho \rho_i \rho^{-1}
 \end{align*}
 
 so it is enough to prove the theorem for a cycle.
 
-Let $\sigma = (a_1, a_2, \ldots, a_r)$ be a cycle of length $r$. We have
+Let $\rho = (a_1, a_2, \ldots, a_r)$ be a cycle of length $r$. We have
 
 $$
-(\sigma \sigma \sigma^{-1}) (\sigma(a_i)) = (\sigma \sigma) (a_i) = \sigma(a_{i+1}) 
+(\rho \rho \rho^{-1}) (\rho(a_i)) = (\rho \rho) (a_i) = \rho(a_{i+1}) 
 $$
 
-so $\sigma \sigma \sigma^{-1}$ will have the cycle $(\sigma(a_1), \sigma(a_2), \ldots, \sigma(a_r))$ with length $r$. Now assume that $x$ is moved by $\sigma \sigma \sigma^{-1}$, so $(\sigma \sigma \sigma^{-1})(x) \neq x$. It follows that $(\sigma \sigma^{-1})(x) \neq \sigma^{-1} (x)$ or $\sigma (\sigma^{-1} (x)) \neq \sigma^{-1} (x)$. This means that $\sigma^{-1} (x) \in (a_1, a_2, \ldots, a_r)$ and $x \in (\sigma(a_1), \sigma(a_2), \ldots, \sigma(a_r))$. It follows that $\sigma \sigma \sigma^{-1} = (\sigma(a_1), \sigma(a_2), \ldots, \sigma(a_r))$.
+so $\rho \rho \rho^{-1}$ will have the cycle $(\rho(a_1), \rho(a_2), \ldots, \rho(a_r))$ with length $r$. Now assume that $x$ is moved by $\rho \rho \rho^{-1}$, so $(\rho \rho \rho^{-1})(x) \neq x$. It follows that $(\rho \rho^{-1})(x) \neq \rho^{-1} (x)$ or $\rho (\rho^{-1} (x)) \neq \rho^{-1} (x)$. This means that $\rho^{-1} (x) \in (a_1, a_2, \ldots, a_r)$ and $x \in (\rho(a_1), \rho(a_2), \ldots, \rho(a_r))$. It follows that $\rho \rho \rho^{-1} = (\rho(a_1), \rho(a_2), \ldots, \rho(a_r))$.
 
 \end{proof}
 
@@ -197,7 +197,7 @@ The first six permutations are important because of how the German Nazis chose t
 We need a way to compute how many possible factorizations there are and a way to generate all possibilities. To accomplish this we need to collect some properties of products of proper involutions. We will use a simplified approach similar to the approach described in chapter 3.8 of \citet{lawrence2021introduction}\footnote{\cite{lawrence2021introduction}}.
 
 \begin{thm}\label{involutionproduct}
-Let $\pi = \tau \sigma$ be the product of proper involutions $\tau$ and $\sigma$ and let $x \in \{1, \ldots, n\}$. Then the $\pi$-orbits of $x$ and $\sigma(x)$ are disjoint and have equal length.
+Let $\pi = \tau \rho$ be the product of proper involutions $\tau$ and $\rho$ and let $x \in \{1, \ldots, n\}$. Then the $\pi$-orbits of $x$ and $\rho(x)$ are disjoint and have equal length.
 \end{thm}
 
 \begin{proof}
@@ -208,63 +208,63 @@ $$
 T_x = \{x, \pi(x), \pi^2(x), \ldots, \pi^{ord(x)-1}(x)\}
 $$
 
-Assume the two orbits are not disjoint and $y \in T_x \cap T_{\sigma(x)}$. For some integers $i$ and $j$ we have $y = \pi^i(x) = \pi^j(\sigma(x))$. Let $m = ord(\sigma(x))$ and let $(k - 1) m < j \leq k m$ for some $k$. Then 
+Assume the two orbits are not disjoint and $y \in T_x \cap T_{\rho(x)}$. For some integers $i$ and $j$ we have $y = \pi^i(x) = \pi^j(\rho(x))$. Let $m = ord(\rho(x))$ and let $(k - 1) m < j \leq k m$ for some $k$. Then 
 
 $$
-\pi^{i + k m - j} (x) = \pi^{k m} (\sigma(x)) = \sigma(x)
+\pi^{i + k m - j} (x) = \pi^{k m} (\rho(x)) = \rho(x)
 $$
 
 Let $n = i + k m - j$ and so
 
 $$
-\sigma (\pi^n (x)) = \sigma^2(x) = x
+\rho (\pi^n (x)) = \rho^2(x) = x
 $$
 
-because $\sigma$ is a proper involution (so it is its own inverse).
+because $\rho$ is a proper involution (so it is its own inverse).
 
 We now have two cases: $n$ can be even or odd.
 
 When $n = 2 l$:
 \begin{align*}
-\sigma \pi^n &= \sigma \pi^l \pi^l \\
-           &= \sigma \underbrace{(\tau\sigma) (\tau\sigma) \ldots (\tau\sigma)}_{l\text{-times}}  \pi^l \\
-           &= \underbrace{(\sigma \tau) (\sigma \tau) \ldots (\sigma \tau)}_{l\text{-times}} \sigma \pi^l \\
-           &= \pi^{-l} \sigma \pi^l
+\rho \pi^n &= \rho \pi^l \pi^l \\
+           &= \rho \underbrace{(\tau\rho) (\tau\rho) \ldots (\tau\rho)}_{l\text{-times}}  \pi^l \\
+           &= \underbrace{(\rho \tau) (\rho \tau) \ldots (\rho \tau)}_{l\text{-times}} \rho \pi^l \\
+           &= \pi^{-l} \rho \pi^l
 \end{align*}
 
-This means that $\sigma \pi^n$ is a conjugate of $\sigma$ and thus it is a proper involution and cannot have $x$ mapping to itself. We have a contradiction.
+This means that $\rho \pi^n$ is a conjugate of $\rho$ and thus it is a proper involution and cannot have $x$ mapping to itself. We have a contradiction.
 
 When $n = 2 l + 1$:
 
 \begin{align*}
-\sigma \pi^n &= \sigma \pi^l \tau \sigma \pi^l \\
-           &= \sigma \underbrace{(\tau\sigma) (\tau\sigma) \ldots (\tau\sigma)}_{l\text{-times}}  \tau \sigma \pi^l \\
-           &= \underbrace{(\sigma \tau) (\sigma \tau) \ldots (\sigma \tau)}_{l\text{-times}} \sigma \tau \sigma \pi^l \\
-           &= (\sigma \pi)^{-1} \tau (\sigma \pi^l)
+\rho \pi^n &= \rho \pi^l \tau \rho \pi^l \\
+           &= \rho \underbrace{(\tau\rho) (\tau\rho) \ldots (\tau\rho)}_{l\text{-times}}  \tau \rho \pi^l \\
+           &= \underbrace{(\rho \tau) (\rho \tau) \ldots (\rho \tau)}_{l\text{-times}} \rho \tau \rho \pi^l \\
+           &= (\rho \pi)^{-1} \tau (\rho \pi^l)
 \end{align*}
 
-This means that $\sigma \pi^n$ is a conjugate of $\tau$ and thus it is a proper involution and cannot have $x$ mapping to itself. Again we have a contradiction.
+This means that $\rho \pi^n$ is a conjugate of $\tau$ and thus it is a proper involution and cannot have $x$ mapping to itself. Again we have a contradiction.
 
-We just showed that the $\pi$-orbits of $x$ and $\sigma(x)$ are disjoint. To show that the orbits have the same length, we again reach for this useful identity: for any integer $m$ we have $\sigma \pi^m = \pi^{-m} \sigma$. This is because
+We just showed that the $\pi$-orbits of $x$ and $\rho(x)$ are disjoint. To show that the orbits have the same length, we again reach for this useful identity: for any integer $m$ we have $\rho \pi^m = \pi^{-m} \rho$. This is because
 
 \begin{align*}
-\sigma \pi^m &= \sigma \underbrace{(\tau\sigma) (\tau\sigma) \ldots (\tau\sigma)}_{m\text{-times}} \\
-           &= \underbrace{(\sigma \tau) (\sigma \tau) \ldots (\sigma \tau)}_{m\text{-times}} \sigma \\
-           &= \pi^{-m} \sigma
+\rho \pi^m &= \rho \underbrace{(\tau\rho) (\tau\rho) \ldots (\tau\rho)}_{m\text{-times}} \\
+           &= \underbrace{(\rho \tau) (\rho \tau) \ldots (\rho \tau)}_{m\text{-times}} \rho \\
+           &= \pi^{-m} \rho
 \end{align*}
 
 The identity allows for this equivalence: 
 
 $$
-\pi^{-m}(\sigma(x)) = \sigma(x) \Leftrightarrow \sigma(x) = \sigma(\pi^m(x)) \Leftrightarrow \pi^m(x) = x
+\pi^{-m}(\rho(x)) = \rho(x) \Leftrightarrow \rho(x) = \rho(\pi^m(x)) \Leftrightarrow \pi^m(x) = x
 $$
 
-It means that the $\pi^{-1}$-orbit of $\sigma(x)$ has the same length as the $\pi$-orbit of $x$. But $\pi^{-1}$-orbit and $\pi$-orbit of an element are the same\footnote{Just walk the cycle backwards.}.
-So the $\pi$-orbits of $x$ and $\sigma(x)$ have the same length.
+It means that the $\pi^{-1}$-orbit of $\rho(x)$ has the same length as the $\pi$-orbit of $x$. But $\pi^{-1}$-orbit and $\pi$-orbit of an element are the same\footnote{Just walk the cycle backwards.}.
+So the $\pi$-orbits of $x$ and $\rho(x)$ have the same length.
 \end{proof}
 
 \begin{thm}\label{involutionproduct2}
-Let $\pi = \tau \sigma$ be the product of proper involutions $\tau$ and $\sigma$ and let $x \in \{1, \ldots, n\}$. Then the $\pi$-orbits of $\tau(x)$ and $\sigma(x)$ are equal. In addition to that, the $\pi$-orbit of $x$ is mapped by $\tau$ and $\sigma$ onto this common $\pi$-orbit of $\tau(x)$ and $\sigma(x)$.
+Let $\pi = \tau \rho$ be the product of proper involutions $\tau$ and $\rho$ and let $x \in \{1, \ldots, n\}$. Then the $\pi$-orbits of $\tau(x)$ and $\rho(x)$ are equal. In addition to that, the $\pi$-orbit of $x$ is mapped by $\tau$ and $\rho$ onto this common $\pi$-orbit of $\tau(x)$ and $\rho(x)$.
 \end{thm}
 
 \begin{proof}
@@ -272,28 +272,28 @@ Let $\pi = \tau \sigma$ be the product of proper involutions $\tau$ and $\sigma$
 Keeping in mind that a proper inversion is its own inverse, we have:
 
 \begin{align*}
-\sigma(x) &= \sigma(x) \\
-        &= \sigma(\tau^2(x)) \\
-        &= (\sigma \tau) (\tau(x)) \\
+\rho(x) &= \rho(x) \\
+        &= \rho(\tau^2(x)) \\
+        &= (\rho \tau) (\tau(x)) \\
         &= \pi^{-1} (\tau(x))
 \end{align*}
 
-so then $\pi(\sigma(x)) = \tau(x)$ and $\tau(x)$ is in the $\pi$-orbit of $\sigma(x)$.
+so then $\pi(\rho(x)) = \tau(x)$ and $\tau(x)$ is in the $\pi$-orbit of $\rho(x)$.
 
-Using the $\sigma \pi^m = \pi^{-m} \sigma$ identity again, we see that
+Using the $\rho \pi^m = \pi^{-m} \rho$ identity again, we see that
 
 $$
-\sigma (\pi^m (x)) = \pi^{-m}(\sigma(x))
+\rho (\pi^m (x)) = \pi^{-m}(\rho(x))
 $$
 
-so $\sigma$ maps the $\pi$-orbit of $x$ onto the $\pi$-orbit of $\sigma(x)$. 
+so $\rho$ maps the $\pi$-orbit of $x$ onto the $\pi$-orbit of $\rho(x)$. 
 
 To see where $\tau$ maps the $\pi$-orbit of $x$ we need a similar identity, so lets deduce it:
 
 \begin{align*}
-\tau \pi^m &= \tau \underbrace{(\tau\sigma) (\tau\sigma) \ldots (\tau\sigma)}_{m\text{-times}} \\
-           &= \tau \tau \underbrace{(\sigma\tau) (\sigma\tau) \ldots (\sigma\tau)}_{m-1\text{-times}} \sigma \\
-           &= \pi^{-m+1} \sigma \\
+\tau \pi^m &= \tau \underbrace{(\tau\rho) (\tau\rho) \ldots (\tau\rho)}_{m\text{-times}} \\
+           &= \tau \tau \underbrace{(\rho\tau) (\rho\tau) \ldots (\rho\tau)}_{m-1\text{-times}} \rho \\
+           &= \pi^{-m+1} \rho \\
            &= \pi^{-m+1} \pi^{-1} \tau \\
            &= \pi^{-m} \tau
 \end{align*}
@@ -303,36 +303,36 @@ We can use this identity for:
 
 \begin{align*}
 \tau(\pi^m(x)) &= \pi^{-m}(\tau(x)) \\
-               &= \pi^{-m}(\pi\sigma)(x) \\
-               &= \pi^{1-m} (\sigma(x)) 
+               &= \pi^{-m}(\pi\rho)(x) \\
+               &= \pi^{1-m} (\rho(x)) 
 \end{align*}
 
-so $\tau$ also maps the $\pi$-orbit of $x$ onto the $\pi$-orbit of $\sigma(x)$. 
+so $\tau$ also maps the $\pi$-orbit of $x$ onto the $\pi$-orbit of $\rho(x)$. 
 
 \end{proof}
 
 \begin{thm}\label{involutionproduct3}
-Let $\pi = \tau \sigma$ be the product of proper involutions $\tau$ and $\sigma$ and let $x \in \{1, \ldots, n\}$. Let $y \notin T_x \cup T_{\sigma(x)}$. Then $\sigma(y) \notin T_x \cup T_{\sigma(x)}$.
+Let $\pi = \tau \rho$ be the product of proper involutions $\tau$ and $\rho$ and let $x \in \{1, \ldots, n\}$. Let $y \notin T_x \cup T_{\rho(x)}$. Then $\rho(y) \notin T_x \cup T_{\rho(x)}$.
 \end{thm}
 
 \begin{proof}
 
-Assume $\sigma(y) \in T_x \cup T_{\sigma(x)}$. Two cases:
+Assume $\rho(y) \in T_x \cup T_{\rho(x)}$. Two cases:
 
-First case: $\sigma(y) \in T_x$. Then $\sigma(y) = \pi^m(x)$ for some $m \in \mathbb{N}$. Keeping in mind again that the a proper involution is its own inverse, we apply $\sigma$ to both sides to get
-
-$$
-y = (\sigma \pi^m)(x) = \pi^{-m} (\sigma(x))
-$$
-
-so $y \in T_{\sigma(x)}$ which is a contradiction.
-
-Second case: $\sigma(y) \in T_{\sigma(x)}$. We proceed similarly:
-
-$\sigma(y) = \pi^m(\sigma(x))$ for some $m \in \mathbb{N}$ so
+First case: $\rho(y) \in T_x$. Then $\rho(y) = \pi^m(x)$ for some $m \in \mathbb{N}$. Keeping in mind again that the a proper involution is its own inverse, we apply $\rho$ to both sides to get
 
 $$
-y = (\sigma \pi^m)(\sigma(x)) = \pi^{-m} (\sigma \sigma)(x) = \pi^{-m} (x)
+y = (\rho \pi^m)(x) = \pi^{-m} (\rho(x))
+$$
+
+so $y \in T_{\rho(x)}$ which is a contradiction.
+
+Second case: $\rho(y) \in T_{\rho(x)}$. We proceed similarly:
+
+$\rho(y) = \pi^m(\rho(x))$ for some $m \in \mathbb{N}$ so
+
+$$
+y = (\rho \pi^m)(\rho(x)) = \pi^{-m} (\rho \rho)(x) = \pi^{-m} (x)
 $$
 
 so $y \in T_x$ which is a contradiction.
@@ -341,16 +341,16 @@ so $y \in T_x$ which is a contradiction.
 
 
 \begin{thm}\label{involutionproduct4}
-Let $\pi = \tau \sigma$ be the product of proper involutions $\tau$ and $\sigma$. Then the cycle lengths of $\pi$ that are greater than one come in even numbers.
+Let $\pi = \tau \rho$ be the product of proper involutions $\tau$ and $\rho$. Then the cycle lengths of $\pi$ that are greater than one come in even numbers.
 \end{thm}
 
 \begin{proof}
 
 Let $(a b)$ be a cycle of $\tau$. We have two cases: 
 
-Case 1: $(a b)$ is also a cycle of $\sigma$. Then the product $\pi$ has cycles $(a)$ and $(b)$ of length one.
+Case 1: $(a b)$ is also a cycle of $\rho$. Then the product $\pi$ has cycles $(a)$ and $(b)$ of length one.
 
-Case 2: $(a b)$ is not a cycle of $\sigma$. Then it must have a cycle $(a c_{1})$ for some $c_{1}$. In $\tau$ there must be a cycle $(c_{1} c_{2})$ for some $c_{2}$. In $\sigma$ again there must be a cycle $(c_{2} c_{3})$ for some $c_{3}$, $\ldots$ (remember, $\sigma$ and $\tau$ are proper involutions, so each element participates in one and only one 2-cycle). We stop with a cycle $(c_{2k} b)$ in $\sigma$, which eventually must happen. Then the product $\pi$ has cycles $(c_{2k} c_{2k - 2} \ldots c_{2} a)$ and $(c_{1} c_{3} c_{2k-1} b)$ of length $k$.
+Case 2: $(a b)$ is not a cycle of $\rho$. Then it must have a cycle $(a c_{1})$ for some $c_{1}$. In $\tau$ there must be a cycle $(c_{1} c_{2})$ for some $c_{2}$. In $\rho$ again there must be a cycle $(c_{2} c_{3})$ for some $c_{3}$, $\ldots$ (remember, $\rho$ and $\tau$ are proper involutions, so each element participates in one and only one 2-cycle). We stop with a cycle $(c_{2k} b)$ in $\rho$, which eventually must happen. Then the product $\pi$ has cycles $(c_{2k} c_{2k - 2} \ldots c_{2} a)$ and $(c_{1} c_{3} c_{2k-1} b)$ of length $k$.
 
 \end{proof}
 
@@ -362,26 +362,26 @@ Let $\pi \in S_{2n}$ be a permutation composed of just two disjoint cycles of le
 
 \begin{proof}
 
-Pick an $a \in \{1, \ldots, 2n\}$. It is part of one of the two cycles. We are looking for possible $\pi = \tau \sigma$ factorizations, with both $\tau$ and $\sigma$ being proper involutions.
+Pick an $a \in \{1, \ldots, 2n\}$. It is part of one of the two cycles. We are looking for possible $\pi = \tau \rho$ factorizations, with both $\tau$ and $\rho$ being proper involutions.
 The two $\pi$-orbits of the two cycles are $A := T_a = \{a, \pi(a), \ldots, \pi^{n-1}(a)\}$ and $B := S_{2n} \setminus A$.
 
-We are going to construct all the possible $\sigma$ using the previous theorems as constraints (once a possible $\sigma$ is constructed, it also fully determines the other factor, $\tau$). 
+We are going to construct all the possible $\rho$ using the previous theorems as constraints (once a possible $\rho$ is constructed, it also fully determines the other factor, $\tau$). 
 
-For example, because of theorem \ref{involutionproduct} we have to pick some element from $B$ for $\sigma(a)$: $\sigma(a) \in B$. We will argue that once this choice has been made, the complete factorization has been determined. Let's see why. What value should $\sigma(\pi(a))$ take ? Again, using the identity $\sigma \pi^m = \pi^{-m} \sigma$, we get $\sigma(\pi(a)) = \pi^{-1}(\sigma(a))$. By repeatedly using the identity as we move $\pi$-forward in the cycle with $a$, we move $\pi$-backwards in the other cycle and at each stop we make another pair for the proper involution $\sigma$. 
+For example, because of theorem \ref{involutionproduct} we have to pick some element from $B$ for $\rho(a)$: $\rho(a) \in B$. We will argue that once this choice has been made, the complete factorization has been determined. Let's see why. What value should $\rho(\pi(a))$ take ? Again, using the identity $\rho \pi^m = \pi^{-m} \rho$, we get $\rho(\pi(a)) = \pi^{-1}(\rho(a))$. By repeatedly using the identity as we move $\pi$-forward in the cycle with $a$, we move $\pi$-backwards in the other cycle and at each stop we make another pair for the proper involution $\rho$. 
 
 \begin{figure}
 \includegraphics[scale=0.35]{enigma1.pdf}
-\caption{Constructing $\sigma$.}
+\caption{Constructing $\rho$.}
 \label{rhoconstructionexample}
 \end{figure}
 
-Figure \ref{rhoconstructionexample} shows the process for an example with two cycles of length four. After setting an $a$ and picking where to map $\sigma(a)$, everything else is determined (the labels in the figure show the expressions determining the relationships).
+Figure \ref{rhoconstructionexample} shows the process for an example with two cycles of length four. After setting an $a$ and picking where to map $\rho(a)$, everything else is determined (the labels in the figure show the expressions determining the relationships).
 
-There are $n$ ways to pick an element from $B$, hence we can construct $n$ different $\sigma$, so $n$ different factorizations $\pi = \tau \sigma$. It doesn't matter which $a$ we start with. Through the cycle-wise rotation in cycle with $a$ and counter-cycle rotation in the cycle with $\sigma(a)$, we see all $n$ possible $\sigma$ constructions, regardless which $a$ is our anchor. Does it matter from which cycle we choose the anchor ? It doesn't because again the same factorizations would be produced if all the $\sigma$-arrows in figure \ref{rhoconstructionexample} were reversed.
+There are $n$ ways to pick an element from $B$, hence we can construct $n$ different $\rho$, so $n$ different factorizations $\pi = \tau \rho$. It doesn't matter which $a$ we start with. Through the cycle-wise rotation in cycle with $a$ and counter-cycle rotation in the cycle with $\rho(a)$, we see all $n$ possible $\rho$ constructions, regardless which $a$ is our anchor. Does it matter from which cycle we choose the anchor ? It doesn't because again the same factorizations would be produced if all the $\rho$-arrows in figure \ref{rhoconstructionexample} were reversed.
 
 \end{proof}
 
-Now theorem \ref{involutionproduct4} assures us that any product of two proper involutions has cycle lengths greater than one occurring an even number of times. We can always pair up two cycles of the same length. Theorems \ref{involutionproduct2} and \ref{involutionproduct3} help us isolate the pairings and construct the factors by restricting ourselves to each pairing and using the construction from theorem \ref{involutionproduct5} to build the possible factors for each paired restriction. We multiply all the restricted $\tau$'s to get the unrestricted $\tau$ and multiply all the restricted $\sigma$'s to get the unrestricted $\sigma$.
+Now theorem \ref{involutionproduct4} assures us that any product of two proper involutions has cycle lengths greater than one occurring an even number of times. We can always pair up two cycles of the same length. Theorems \ref{involutionproduct2} and \ref{involutionproduct3} help us isolate the pairings and construct the factors by restricting ourselves to each pairing and using the construction from theorem \ref{involutionproduct5} to build the possible factors for each paired restriction. We multiply all the restricted $\tau$'s to get the unrestricted $\tau$ and multiply all the restricted $\rho$'s to get the unrestricted $\rho$.
 
 So how many factorizations are there for a given product $\pi$? Lets say $\pi$ has $2m_k$ cycles of length $k$. In how many ways can we pair up these $2m_k$ cycles? 
 
