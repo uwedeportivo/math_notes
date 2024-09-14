@@ -105,6 +105,10 @@
 
 \newtcolorbox{problem}{title={Problem}}
 
+\newenvironment{solution}
+{\begin{proof}[Solution]}
+{\end{proof}}
+
 \DeclareMathSymbol{\mlq}{\mathord}{operators}{``}
 \DeclareMathSymbol{\mrq}{\mathord}{operators}{`'}
 
@@ -289,6 +293,10 @@ Code snippets are mostly in Haskell and Mathematica. I'm not an expert in either
 \clearpage
 \chapter{Two algebraic delights}
 \subimport{two_algebraic_delights/}{two_algebraic_delights_content.tex}
+
+\clearpage
+\chapter{Sequences and Series}
+\subimport{series/}{series_content.tex}
 
 \begin{fullwidth}
 \bibliography{common/math}

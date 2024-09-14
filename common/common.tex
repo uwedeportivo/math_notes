@@ -58,6 +58,8 @@
 
 \usepackage[nottoc]{tocbibind}
 
+\usepackage{mathtools}
+
 \theoremstyle{plain}% default 
 \newtheorem{thm}{Theorem}[chapter] 
 \newtheorem{lem}[thm]{Lemma} 
@@ -76,8 +78,11 @@
 \newtheorem*{rem}{Remark} 
 \newtheorem*{note}{Note} 
 \newtheorem{case}{Case}
-\newtheorem{thminv}{Invariant}[chapter] 
+\newtheorem{thminv}{Invariant}[chapter]
 
+\newenvironment{solution}
+{\begin{proof}[Solution]}
+{\end{proof}}
 
 \newtcolorbox{problem}{title={Problem}}
 
@@ -103,4 +108,3 @@
 
 \DeclareMathSymbol{\mlq}{\mathord}{operators}{``}
 \DeclareMathSymbol{\mrq}{\mathord}{operators}{`'}
-
