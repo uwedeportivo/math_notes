@@ -10,9 +10,9 @@ for NOTE_DIR in $NOTE_DIRS
 do
     cd $NOTE_DIR
     echo copy $NOTE_DIR
-    cp -f $NOTE_DIR.pdf /Users/uwe/src/blogs/sagenhaft/public/posts/math_notes/$NOTE_DIR/$NOTE_DIR.pdf
+    cp -f $NOTE_DIR.pdf /Users/uwe/src/blogs/sagenhaft/content/posts/math_notes/$NOTE_DIR/$NOTE_DIR.pdf
     cd ..
 done
 
 echo copy book
-cp -f book.pdf /Users/uwe/src/blogs/sagenhaft/public/posts/math_notes/book.pdf
+cp -f book.pdf /Users/uwe/src/blogs/sagenhaft/content/tags/math-notes/book.pdf
