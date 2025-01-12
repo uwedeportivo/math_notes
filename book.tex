@@ -26,6 +26,8 @@
 \usepackage{listings}
 \lstloadlanguages{Haskell}
 
+\usepackage{pdfpages}
+
 \usepackage{permute}
 
 \newcommand{\monthyear}{%
@@ -297,6 +299,12 @@ Code snippets are mostly in Haskell and Mathematica. I'm not an expert in either
 \clearpage
 \chapter{Sequences and Series}
 \subimport{series/}{series_content.tex}
+
+\clearpage
+\chapter{Existence of n-th Root}
+\subimport{nthroot/}{nthroot_content.tex}
+\includepdf[pages=-,pagecommand={},scale=.8]{nthroot/nthroot.pdf}
+
 
 \begin{fullwidth}
 \bibliography{common/math}
